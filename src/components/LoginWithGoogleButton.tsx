@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import AppButton from "./AppButton";
 import { signIn } from "next-auth/react";
+
+import AppButton from "./AppButton";
 
 const LoginWithGoogleButton = (
   props: React.ComponentProps<typeof AppButton>,

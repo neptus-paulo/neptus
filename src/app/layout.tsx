@@ -1,6 +1,8 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+
 import { ReactQueryClientProvider } from "@/lib/react-query-provider";
 
 const interSans = Inter({

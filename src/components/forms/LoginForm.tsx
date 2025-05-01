@@ -1,10 +1,10 @@
 "use client";
-import { LoginFormSchema, loginFormSchema } from "@/schemas/login-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import AppButton from "../AppButton";
+import { LoginFormSchema, loginFormSchema } from "@/schemas/login-schema";
 
+import AppButton from "../AppButton";
 import {
   Form,
   FormControl,

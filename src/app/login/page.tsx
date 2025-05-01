@@ -1,9 +1,10 @@
 "use client";
 
-import LoginForm from "@/components/forms/LoginForm";
-import LoginWithGoogleButton from "@/components/LoginWithGoogleButton";
 import Image from "next/image";
 import Link from "next/link";
+
+import LoginForm from "@/components/forms/LoginForm";
+import LoginWithGoogleButton from "@/components/LoginWithGoogleButton";
 
 const LoginPage = () => {
   return (
