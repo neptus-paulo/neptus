@@ -18,8 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${interSans.className} antialiased`}>
+    <html lang="pt-br">
+      <body
+        className={`${interSans.className} antialiased max-w-[430px] mx-auto border-x-1`}
+      >
         <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
       </body>
     </html>
