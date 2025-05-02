@@ -27,6 +27,7 @@ const LoginForm = () => {
   });
 
   const handleLogin = (data: LoginFormSchema) => {
+    // TODO: Implementar a lógica de login
     console.log(data);
   };
 
