@@ -1,5 +1,7 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import { LoginFormSchema, loginFormSchema } from "@/schemas/login-schema";
@@ -47,7 +49,7 @@ const LoginForm = () => {
                   type="email"
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs" />
             </FormItem>
           )}
         />
@@ -57,7 +59,15 @@ const LoginForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Senha</FormLabel>
+              <FormLabel className="flex justify-between">
+                <span>Senha</span>
+                <Link
+                  className="text-muted-foreground hover:text-foreground underline"
+                  href="/recuperar-senha"
+                >
+                  Esqueci minha senha
+                </Link>
+              </FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -65,7 +75,7 @@ const LoginForm = () => {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs" />
             </FormItem>
           )}
         />
