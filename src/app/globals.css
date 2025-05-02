@@ -37,6 +37,7 @@
 @layer base {
   :root {
     --radius: 0.5rem;
+    --font-size: 16px;
     --primary: oklch(0.59 0.2135 258.37);
     --primary-foreground: oklch(0.984 0.0075 247.858);
     --secondary: oklch(0.69 0.1637 37.55);
@@ -87,6 +88,9 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  html {
+    font-size: var(--font-size);
   }
   body {
     @apply bg-background text-foreground;
