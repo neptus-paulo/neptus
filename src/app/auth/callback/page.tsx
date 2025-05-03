@@ -17,7 +17,7 @@ const CallbackPage = () => {
   useEffect(() => {
     const handleAuth = async () => {
       if (status !== "authenticated" || !session?.id_token) {
-        console.log("Sessão não autenticada ou sem ID token");
+        console.log("Sessão não autenticada ou sem ID token.");
         router.push("/login");
         return;
       }
