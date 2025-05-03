@@ -3,7 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { ReactQueryClientProvider } from "@/lib/react-query-provider";
+import Providers from "@/auth/Providers";
 
 const interSans = Inter({
   subsets: ["latin"],
@@ -24,7 +24,7 @@ export default function RootLayout({
       <body
         className={`${interSans.className} antialiased max-w-[430px] mx-auto border-x-1`}
       >
-        <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
