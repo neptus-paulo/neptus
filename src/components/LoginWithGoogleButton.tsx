@@ -16,8 +16,10 @@ const LoginWithGoogleButton = (
     if (isGoogleLoading) return;
     setIsGoogleLoading(true);
 
-    await signIn("google", { callbackUrl: "/dashboard" })
-      .catch((error) => console.error("Error signing in with Google:", error))
+    await signIn("google", { callbackUrl: "/auth/callback" })
+      .catch((error) =>
+        console.error("Erro ao tentar entrar com Google:", error),
+      )
       .finally(() => setIsGoogleLoading(false));
   };
 
