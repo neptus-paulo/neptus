@@ -17,7 +17,7 @@ export const errorCodes = {
 export type ErrorCode = (typeof errorCodes)[keyof typeof errorCodes];
 
 export const getFriendlyMessage = (error: ApiError): string => {
-  const [code, ...messageParts] = error.message.replace("$", "").split(":");
+  const [code, ...messageParts] = error.message.split(":");
   const message = messageParts.join(":").trim();
 
   const messages: Record<string, string> = {
@@ -35,7 +35,7 @@ export const getFriendlyMessage = (error: ApiError): string => {
 
 export const formatAndThrowError = (
   error: unknown,
-  defaultMessage: string = "Ocorreu um erro inesperado",
+  defaultMessage = "Ocorreu um erro inesperado",
 ): never => {
   const apiError =
     error instanceof ApiError ? error : new ApiError(500, defaultMessage);

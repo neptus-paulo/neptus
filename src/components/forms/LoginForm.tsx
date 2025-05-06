@@ -104,11 +104,8 @@ const LoginForm = () => {
         <AppButton
           type="submit"
           className="w-full"
-          disabled={loginForm.formState.isSubmitting}
+          isLoading={loginForm.formState.isSubmitting}
         >
-          {loginForm.formState.isSubmitting && (
-            <Loader2 className="animate-spin" />
-          )}
           Entrar
         </AppButton>
         {error && <p className="text-error text-sm text-center">{error}</p>}

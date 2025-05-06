@@ -37,17 +37,12 @@ export const options: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials) return null;
 
-        try {
-          const response = await login(credentials);
-          return {
-            ...response.usuario,
-            access_token: response.access_token,
-            refresh_token: response.refresh_token,
-          };
-        } catch (error) {
-          formatAndThrowError(error, "Erro ao fazer login");
-          return null;
-        }
+        const response = await login(credentials);
+        return {
+          ...response.usuario,
+          access_token: response.access_token,
+          refresh_token: response.refresh_token,
+        };
       },
     }),
     GoogleProvider({

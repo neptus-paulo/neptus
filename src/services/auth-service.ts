@@ -1,7 +1,8 @@
 import { ApiError } from "next/dist/server/api-utils";
 
 import api from "@/lib/axios";
-import { LoginResponse } from "@/types/user-type";
+import { LoginResponse, RegisterResponse } from "@/types/user-type";
+import { formatAndThrowError } from "@/utils/error-util";
 
 export const loginWithGoogle = async (
   id_token: string,
@@ -30,9 +31,24 @@ export const login = async (loginData: {
     });
     return data;
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw new ApiError(error.statusCode, error.message);
-    }
-    throw error;
+    throw formatAndThrowError(error, "Erro ao fazer login");
+  }
+};
+
+export const register = async (registerData: {
+  name: string;
+  email: string;
+  password: string;
+}): Promise<RegisterResponse> => {
+  try {
+    const { data } = await api.post("/register", {
+      email: registerData.email,
+      nome: registerData.name,
+      senha: registerData.password,
+    });
+
+    return data;
+  } catch (error) {
+    throw formatAndThrowError(error, "Erro ao registrar usuário");
   }
 };

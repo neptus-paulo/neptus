@@ -21,6 +21,12 @@ export type LoginResponse = {
   usuario: UserSession;
 };
 
+export type RegisterResponse = {
+  access_token: string;
+  refresh_token: string;
+  messagem: string;
+};
+
 export type UserSession = {
   id: string;
   nome: string;

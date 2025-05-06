@@ -20,7 +20,7 @@ api.interceptors.response.use(
 
       throw new ApiError(
         apiError.status || error.response?.status,
-        `$${apiError.code}: ${apiError.message}`,
+        `${apiError.code}: ${apiError.message}`,
       );
     }
     throw new ApiError(500, "UnknownError: Erro desconhecido");

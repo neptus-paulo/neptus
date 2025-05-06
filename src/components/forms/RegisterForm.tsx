@@ -1,13 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import {
   RegisterFormSchema,
   registerFormSchema,
 } from "@/schemas/register-schema";
+import { register } from "@/services/auth-service";
 
 import AppButton from "../AppButton";
 import {
@@ -21,6 +25,7 @@ import {
 import { Input } from "../ui/input";
 
 const RegisterForm = () => {
+  const [error, setError] = useState<string | null>(null);
   const registerForm = useForm<RegisterFormSchema>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
@@ -31,9 +36,29 @@ const RegisterForm = () => {
     },
   });
 
-  const handleRegister = (data: RegisterFormSchema) => {
-    // TODO: Implementar a lógica de cadastro
-    console.log(data);
+  const handleRegister = async (data: RegisterFormSchema) => {
+    if (registerForm.formState.isSubmitting) setError(null);
+    try {
+      await register(data);
+      signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/",
+      });
+    } catch (error) {
+      registerForm.reset();
+
+      if (error instanceof Error) {
+        try {
+          const errorData = JSON.parse(error.message);
+          setError(errorData.message);
+        } catch {
+          setError(error.message);
+        }
+      } else {
+        setError("Erro desconhecido ao registrar");
+      }
+    }
   };
 
   return (
@@ -106,9 +131,14 @@ const RegisterForm = () => {
           )}
         />
 
-        <AppButton type="submit" className="w-full">
+        <AppButton
+          type="submit"
+          className="w-full"
+          isLoading={registerForm.formState.isSubmitting}
+        >
           Criar conta
         </AppButton>
+        {error && <p className="text-error text-sm text-center">{error}</p>}
       </form>
     </Form>
   );
