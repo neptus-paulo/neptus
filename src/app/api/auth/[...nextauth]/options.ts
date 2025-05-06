@@ -1,5 +1,3 @@
-import axios from "axios";
-import { ApiError } from "next/dist/server/api-utils";
 import { DefaultSession, NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,11 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { login, loginWithGoogle } from "@/services/auth-service";
 import { UserSession } from "@/types/user-type";
-import {
-  ErrorApiType,
-  formatAndThrowError,
-  getFriendlyMessage,
-} from "@/utils/error-util";
+import { formatAndThrowError } from "@/utils/error-util";
 declare module "next-auth/jwt" {
   interface JWT extends UserSession {
     sub: string;
@@ -149,6 +143,5 @@ export const options: NextAuthOptions = {
   },
   pages: {
     signIn: "/login",
-    error: "/auth/error",
   },
 };
