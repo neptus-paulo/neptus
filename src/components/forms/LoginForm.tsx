@@ -1,7 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { LoginFormSchema, loginFormSchema } from "@/schemas/login-schema";
@@ -18,6 +22,8 @@ import {
 import { Input } from "../ui/input";
 
 const LoginForm = () => {
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   const loginForm = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -26,9 +32,24 @@ const LoginForm = () => {
     },
   });
 
-  const handleLogin = (data: LoginFormSchema) => {
-    // TODO: Implementar a lógica de login
-    console.log(data);
+  const handleLogin = async (data: LoginFormSchema) => {
+    if (loginForm.formState.isSubmitting) setError(null);
+    const result = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      loginForm.reset();
+      try {
+        const errorData = JSON.parse(result.error);
+        setError(errorData.message);
+      } catch {
+        setError("Credenciais inválidas");
+      }
+    } else if (result?.ok) {
+      router.push("/");
+    }
   };
 
   return (
@@ -80,9 +101,17 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-        <AppButton type="submit" className="w-full">
+        <AppButton
+          type="submit"
+          className="w-full"
+          disabled={loginForm.formState.isSubmitting}
+        >
+          {loginForm.formState.isSubmitting && (
+            <Loader2 className="animate-spin" />
+          )}
           Entrar
         </AppButton>
+        {error && <p className="text-error text-sm text-center">{error}</p>}
       </form>
     </Form>
   );

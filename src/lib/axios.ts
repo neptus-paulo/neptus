@@ -1,10 +1,30 @@
 import axios from "axios";
+import { ApiError } from "next/dist/server/api-utils";
 
-const instance = axios.create({
-  baseURL: "http://neptus.publicvm.com",
+const api = axios.create({
+  baseURL: "https://neptus.publicvm.com",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-export default instance;
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (axios.isAxiosError(error)) {
+      const apiError = error.response?.data || {
+        code: "api_error",
+        message: "Erro desconhecido na API",
+        status: 500,
+      };
+
+      throw new ApiError(
+        apiError.status || error.response?.status,
+        `$${apiError.code}: ${apiError.message}`,
+      );
+    }
+    throw new ApiError(500, "UnknownError: Erro desconhecido");
+  },
+);
+
+export default api;

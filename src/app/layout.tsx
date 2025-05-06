@@ -21,14 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <head>
-        <meta
-          http-equiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        ></meta>
-      </head>
       <body
-        className={`${interSans.className} antialiased max-w-[430px] mx-auto border-x-1`}
+        className={`${interSans.className} antialiased max-w-[430px] mx-auto`}
       >
         <Providers>{children}</Providers>
       </body>

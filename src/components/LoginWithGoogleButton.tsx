@@ -13,14 +13,9 @@ const LoginWithGoogleButton = (
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (isGoogleLoading) return;
     setIsGoogleLoading(true);
-
-    await signIn("google", { callbackUrl: "/auth/callback" })
-      .catch((error) =>
-        console.error("Erro ao tentar entrar com Google:", error),
-      )
-      .finally(() => setIsGoogleLoading(false));
+    await signIn("google", { callbackUrl: "/" });
+    setIsGoogleLoading(false);
   };
 
   return (
