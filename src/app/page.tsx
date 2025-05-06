@@ -8,16 +8,10 @@ import AppButton from "@/components/AppButton";
 import useUserStore from "@/stores/user-store";
 
 const Home = () => {
-  // const { user } = useUserStore();
   const session = useSession();
   useEffect(() => {
     console.log("Sessão:", session);
   }, [session]);
-
-  // if (!data?.user) {
-  //   console.log("Sem dados de usuário.", data?.user);
-  //   return;
-  // }
 
   return (
     <div className="p-10">
