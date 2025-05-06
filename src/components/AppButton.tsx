@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const AppButton = ({
   isLoading,
   ...props
-}: React.ComponentProps<typeof Button> & { isLoading: boolean }) => {
+}: React.ComponentProps<typeof Button> & { isLoading?: boolean }) => {
   return (
     <Button
       {...props}
