@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -31,16 +30,17 @@ const LoginForm = () => {
       password: "",
     },
   });
+  const { handleSubmit, reset, control, formState } = loginForm;
 
   const handleLogin = async (data: LoginFormSchema) => {
-    if (loginForm.formState.isSubmitting) setError(null);
+    if (formState.isSubmitting) setError(null);
     const result = await signIn("credentials", {
       ...data,
       redirect: false,
     });
 
     if (result?.error) {
-      loginForm.reset();
+      reset();
       try {
         const errorData = JSON.parse(result.error);
         setError(errorData.message);
@@ -54,12 +54,9 @@ const LoginForm = () => {
 
   return (
     <Form {...loginForm}>
-      <form
-        className="space-y-4 w-full"
-        onSubmit={loginForm.handleSubmit(handleLogin)}
-      >
+      <form className="space-y-4 w-full" onSubmit={handleSubmit(handleLogin)}>
         <FormField
-          control={loginForm.control}
+          control={control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -77,7 +74,7 @@ const LoginForm = () => {
         />
 
         <FormField
-          control={loginForm.control}
+          control={control}
           name="password"
           render={({ field }) => (
             <FormItem>
@@ -104,7 +101,7 @@ const LoginForm = () => {
         <AppButton
           type="submit"
           className="w-full"
-          isLoading={loginForm.formState.isSubmitting}
+          isLoading={formState.isSubmitting}
         >
           Entrar
         </AppButton>

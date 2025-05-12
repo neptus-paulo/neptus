@@ -8,7 +8,7 @@ export const loginWithGoogle = async (
   id_token: string,
 ): Promise<LoginResponse> => {
   try {
-    const { data } = await api.post("/login/google", {
+    const { data } = await api.post("/auth/login/google", {
       token_google: id_token,
     });
     return data;
@@ -25,7 +25,7 @@ export const login = async (loginData: {
   password: string;
 }): Promise<LoginResponse> => {
   try {
-    const { data } = await api.post("/login", {
+    const { data } = await api.post("/auth/login", {
       email: loginData.email,
       senha: loginData.password,
     });
@@ -41,7 +41,7 @@ export const register = async (registerData: {
   password: string;
 }): Promise<RegisterResponse> => {
   try {
-    const { data } = await api.post("/register", {
+    const { data } = await api.post("/auth/register", {
       email: registerData.email,
       nome: registerData.name,
       senha: registerData.password,
