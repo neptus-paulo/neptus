@@ -1,25 +1,15 @@
-"use client";
+import { AppButtonLogout } from "@/components/AppButton";
 
-import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { getSessionData } from "./api/auth/[...nextauth]/options";
 
-import AppButton from "@/components/AppButton";
-import useUserStore from "@/stores/user-store";
-
-const Home = () => {
-  const session = useSession();
-  useEffect(() => {
-    console.log("Sessão:", session);
-  }, [session]);
+const Home = async () => {
+  const session = await getSessionData();
 
   return (
     <div className="p-10">
-      <h1>Olá, {session.data?.user?.nome}</h1>
-      <h1>Email: {session.data?.user?.email}</h1>
-      <AppButton onClick={() => signOut({ callbackUrl: "/login" })}>
-        Sair da conta
-      </AppButton>
+      <h1>Olá, {session?.user.nome}</h1>
+      <h1>Email: {session?.user?.email}</h1>
+      <AppButtonLogout />
     </div>
   );
 };
