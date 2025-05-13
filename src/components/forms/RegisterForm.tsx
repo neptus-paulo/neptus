@@ -1,8 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,9 +33,10 @@ const RegisterForm = () => {
       passwordConfirmation: "",
     },
   });
+  const { control, formState, reset, handleSubmit } = registerForm;
 
   const handleRegister = async (data: RegisterFormSchema) => {
-    if (registerForm.formState.isSubmitting) setError(null);
+    if (formState.isSubmitting) setError(null);
     try {
       await register(data);
       signIn("credentials", {
@@ -46,7 +45,7 @@ const RegisterForm = () => {
         callbackUrl: "/",
       });
     } catch (error) {
-      registerForm.reset();
+      reset();
 
       if (error instanceof Error) {
         try {
@@ -65,10 +64,10 @@ const RegisterForm = () => {
     <Form {...registerForm}>
       <form
         className="space-y-4 w-full"
-        onSubmit={registerForm.handleSubmit(handleRegister)}
+        onSubmit={handleSubmit(handleRegister)}
       >
         <FormField
-          control={registerForm.control}
+          control={control}
           name="name"
           render={({ field }) => (
             <FormItem>
@@ -82,7 +81,7 @@ const RegisterForm = () => {
         />
 
         <FormField
-          control={registerForm.control}
+          control={control}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -96,7 +95,7 @@ const RegisterForm = () => {
         />
 
         <FormField
-          control={registerForm.control}
+          control={control}
           name="password"
           render={({ field }) => (
             <FormItem>
@@ -114,7 +113,7 @@ const RegisterForm = () => {
         />
 
         <FormField
-          control={registerForm.control}
+          control={control}
           name="passwordConfirmation"
           render={({ field }) => (
             <FormItem>
@@ -134,7 +133,7 @@ const RegisterForm = () => {
         <AppButton
           type="submit"
           className="w-full"
-          isLoading={registerForm.formState.isSubmitting}
+          isLoading={formState.isSubmitting}
         >
           Criar conta
         </AppButton>
