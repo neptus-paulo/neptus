@@ -1,9 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
-import AppButton from "@/components/AppButton";
 import BackButton from "@/components/BackButton";
-import ForgotPasswordForm from "@/components/forms/ForgotPasswordForm";
 import ResetPasswordForm from "@/components/forms/ResetPasswordForm";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const ForgotPasswordPage = () => {
   return (
@@ -16,7 +16,9 @@ const ForgotPasswordPage = () => {
         </p>
       </div>
 
-      <ResetPasswordForm />
+      <Suspense fallback={<LoadingSpinner />}>
+        <ResetPasswordForm />
+      </Suspense>
 
       <p className="text-muted-foreground text-sm">
         Já possui uma conta?{" "}
