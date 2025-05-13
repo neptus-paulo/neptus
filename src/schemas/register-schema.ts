@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const passwordSchema = z
+export const passwordSchema = z
   .string()
   .nonempty("Senha é obrigatória")
   .min(6, { message: "Senha deve ter no mínimo 6 caracteres" })

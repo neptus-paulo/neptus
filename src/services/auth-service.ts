@@ -52,3 +52,27 @@ export const register = async (registerData: {
     throw formatAndThrowError(error, "Erro ao registrar usuário");
   }
 };
+
+export const forgotPassword = async (email: string): Promise<void> => {
+  try {
+    await api.post("/auth/forgot-password", {
+      email,
+    });
+  } catch (error) {
+    throw formatAndThrowError(error, "Erro ao recuperar senha");
+  }
+};
+
+export const resetPassword = async (
+  password: string,
+  token: string,
+): Promise<void> => {
+  try {
+    await api.post("/auth/reset-password", {
+      senha: password,
+      token,
+    });
+  } catch (error) {
+    throw formatAndThrowError(error, "Erro ao redefinir senha");
+  }
+};
