@@ -18,12 +18,15 @@ api.interceptors.response.use(
         status: 500,
       };
 
-      throw new ApiError(
-        apiError.status || error.response?.status,
-        `${apiError.code}: ${apiError.message}`,
+      return Promise.reject(
+        new ApiError(
+          apiError.status || error.response?.status,
+          `${apiError.code}: ${apiError.message}`,
+        ),
       );
     }
-    throw new ApiError(500, "UnknownError: Erro desconhecido");
+
+    return Promise.reject(new ApiError(500, "UnknownError: Erro desconhecido"));
   },
 );
 

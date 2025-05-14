@@ -1,11 +1,5 @@
 import { ApiError } from "next/dist/server/api-utils";
 
-export type ErrorApiType = {
-  status: number;
-  message: string;
-  code: ErrorCode;
-};
-
 export const errorCodes = {
   INVALID_CREDENTIALS_ERROR: "InvalidCredentialsError",
   NOT_FOUND_REQUEST_ERROR: "NotFoundRequestError",
@@ -15,9 +9,7 @@ export const errorCodes = {
   USER_DISABLED_ERROR: "UserDisabledError",
 } as const;
 
-export type ErrorCode = (typeof errorCodes)[keyof typeof errorCodes];
-
-export const getFriendlyMessage = (error: ApiError): string => {
+export const getFriendlyMessage = (error: ApiError | Error): string => {
   const [code, ...messageParts] = error.message.split(":");
 
   const messages: Record<string, string> = {
@@ -40,15 +32,18 @@ export const formatAndThrowError = (
   error: unknown,
   defaultMessage = "Ocorreu um erro inesperado",
 ): never => {
-  const apiError =
-    error instanceof ApiError ? error : new ApiError(500, defaultMessage);
+  if (error instanceof ApiError) {
+    console.error(`Erro ${error.statusCode} -`, error);
+    throw error;
+  }
+  console.error(error);
+  throw new ApiError(500, `UnknownError: ${defaultMessage}`);
+};
 
-  console.error(`${defaultMessage}:`, apiError);
+export const parseErrorMessage = (error: unknown): string => {
+  if (error instanceof ApiError || error instanceof Error) {
+    return getFriendlyMessage(error);
+  }
 
-  throw new Error(
-    JSON.stringify({
-      status: apiError.statusCode,
-      message: getFriendlyMessage(apiError) || defaultMessage,
-    }),
-  );
+  return "Erro desconhecido";
 };
