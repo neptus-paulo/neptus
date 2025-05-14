@@ -4,11 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useForgotPassword } from "@/hooks/useForgotPassword";
 import {
   ForgotPasswordSchema,
   forgotPasswordSchema,
 } from "@/schemas/forgotPassword-schema";
-import { forgotPassword } from "@/services/auth-service";
+import { parseErrorMessage } from "@/utils/error-util";
 
 import AppButton from "../AppButton";
 import {
@@ -23,7 +24,13 @@ import { Input } from "../ui/input";
 
 const ForgotPasswordForm = () => {
   const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    mutate: forgotPassword,
+    isError,
+    error,
+    isPending,
+  } = useForgotPassword();
+
   const forgotPasswordForm = useForm<ForgotPasswordSchema>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -32,31 +39,14 @@ const ForgotPasswordForm = () => {
   });
   const { handleSubmit, reset, control, formState } = forgotPasswordForm;
 
-  const handleClick = async (data: ForgotPasswordSchema) => {
+  const handleClick = (data: ForgotPasswordSchema) => {
     if (formState.isSubmitting) {
-      setError(null);
       setMessage(null);
     }
-
-    try {
-      await forgotPassword(data.email);
-      setMessage(
-        "Acesse seu email e clique no link enviado para redefinir sua senha",
-      );
-    } catch (error) {
-      reset();
-
-      if (error instanceof Error) {
-        try {
-          const errorData = JSON.parse(error.message);
-          setError(errorData.message);
-        } catch {
-          setError(error.message);
-        }
-      } else {
-        setError("Erro desconhecido ao registrar");
-      }
-    }
+    forgotPassword(data.email);
+    setMessage(
+      "Acesse seu email e clique no link enviado para redefinir sua senha",
+    );
   };
 
   return (
@@ -83,11 +73,15 @@ const ForgotPasswordForm = () => {
         <AppButton
           type="submit"
           className="w-full"
-          isLoading={formState.isSubmitting}
+          isLoading={formState.isSubmitting || isPending}
         >
           Continuar
         </AppButton>
-        {error && <p className="text-error text-sm text-center">{error}</p>}
+        {isError && (
+          <p className="text-error text-sm text-center">
+            {parseErrorMessage(error)}
+          </p>
+        )}
         {message && (
           <p className="text-success text-sm text-center">{message}</p>
         )}

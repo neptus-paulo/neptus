@@ -2,26 +2,22 @@
 
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+
+import { useLoginWithGoogle } from "@/hooks/useLoginWithGoogle";
 
 import AppButton from "./AppButton";
 
 const LoginWithGoogleButton = (
   props: React.ComponentProps<typeof AppButton>,
 ) => {
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const { mutate: loginWithGoogle, isPending } = useLoginWithGoogle();
 
-  const handleLogin = async () => {
-    setIsGoogleLoading(true);
-    await signIn("google", { callbackUrl: "/" });
-    setIsGoogleLoading(false);
-  };
+  const handleLogin = () => loginWithGoogle();
 
   return (
-    <AppButton {...props} onClick={handleLogin} disabled={isGoogleLoading}>
+    <AppButton {...props} onClick={handleLogin} disabled={isPending}>
       <div className="flex items-center gap-2">
-        {isGoogleLoading ? (
+        {isPending ? (
           <Loader2 className="animate-spin" />
         ) : (
           <Image

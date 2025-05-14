@@ -2,12 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useLogin } from "@/hooks/useLogin";
 import { LoginFormSchema, loginFormSchema } from "@/schemas/login-schema";
+import { parseErrorMessage } from "@/utils/error-util";
 
 import AppButton from "../AppButton";
 import {
@@ -21,8 +20,8 @@ import {
 import { Input } from "../ui/input";
 
 const LoginForm = () => {
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const { mutate: login, isError, error, isPending } = useLogin();
+
   const loginForm = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -33,23 +32,7 @@ const LoginForm = () => {
   const { handleSubmit, reset, control, formState } = loginForm;
 
   const handleLogin = async (data: LoginFormSchema) => {
-    if (formState.isSubmitting) setError(null);
-    const result = await signIn("credentials", {
-      ...data,
-      redirect: false,
-    });
-
-    if (result?.error) {
-      reset();
-      try {
-        const errorData = JSON.parse(result.error);
-        setError(errorData.message);
-      } catch {
-        setError("Credenciais inválidas");
-      }
-    } else if (result?.ok) {
-      router.push("/");
-    }
+    login(data, { onError: () => reset() });
   };
 
   return (
@@ -101,11 +84,15 @@ const LoginForm = () => {
         <AppButton
           type="submit"
           className="w-full"
-          isLoading={formState.isSubmitting}
+          isLoading={formState.isSubmitting || isPending}
         >
           Entrar
         </AppButton>
-        {error && <p className="text-error text-sm text-center">{error}</p>}
+        {isError && (
+          <p className="text-error text-sm text-center">
+            {parseErrorMessage(error)}
+          </p>
+        )}
       </form>
     </Form>
   );

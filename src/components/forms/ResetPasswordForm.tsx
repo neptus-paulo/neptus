@@ -1,15 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useResetPassword } from "@/hooks/useResetPassword";
 import {
   ResetPasswordSchema,
   resetPasswordSchema,
 } from "@/schemas/resetPassword-schema";
-import { resetPassword } from "@/services/auth-service";
+import { parseErrorMessage } from "@/utils/error-util";
 
 import AppButton from "../AppButton";
 import {
@@ -24,8 +25,13 @@ import { Input } from "../ui/input";
 
 const ResetPasswordForm = () => {
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const token = useSearchParams().get("token");
+  const {
+    mutate: resetPassword,
+    isError,
+    error: errorResetPassword,
+    isPending,
+  } = useResetPassword();
 
   const resetPasswordForm = useForm<ResetPasswordSchema>({
     resolver: zodResolver(resetPasswordSchema),
@@ -36,31 +42,21 @@ const ResetPasswordForm = () => {
   });
   const { handleSubmit, reset, control, formState } = resetPasswordForm;
 
-  const handleClick = async (data: ResetPasswordSchema) => {
-    if (formState.isSubmitting) setError(null);
-
-    try {
-      if (!token) {
-        setError("Token inválido");
-        reset();
-        return;
-      }
-      await resetPassword(data.password, token);
-      router.push("/login");
-    } catch (error) {
+  const handleClick = (data: ResetPasswordSchema) => {
+    if (!token) {
+      setError("Token inválido, tente acessar o link novamente");
       reset();
-
-      if (error instanceof Error) {
-        try {
-          const errorData = JSON.parse(error.message);
-          setError(errorData.message);
-        } catch {
-          setError(error.message);
-        }
-      } else {
-        setError("Erro desconhecido ao redefinir a senha");
-      }
+      return;
     }
+    resetPassword(
+      { password: data.password, token },
+      {
+        onError: () => {
+          reset();
+          setError(parseErrorMessage(errorResetPassword));
+        },
+      },
+    );
   };
 
   return (
@@ -105,11 +101,15 @@ const ResetPasswordForm = () => {
         <AppButton
           type="submit"
           className="w-full"
-          isLoading={formState.isSubmitting}
+          isLoading={formState.isSubmitting || isPending}
         >
           Redefinir senha
         </AppButton>
-        {error && <p className="text-error text-sm text-center">{error}</p>}
+        {isError && (
+          <p className="text-error text-sm text-center">
+            {parseErrorMessage(error)}
+          </p>
+        )}
       </form>
     </Form>
   );
