@@ -1,5 +1,3 @@
-import { ApiError } from "next/dist/server/api-utils";
-
 import api from "@/lib/axios";
 import { LoginResponse, RegisterResponse } from "@/types/user-type";
 import { formatAndThrowError } from "@/utils/error-util";
