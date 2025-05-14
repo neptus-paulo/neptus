@@ -13,10 +13,10 @@ export const loginWithGoogle = async (
     });
     return data;
   } catch (error) {
-    if (error instanceof ApiError) {
-      throw new ApiError(error.statusCode, error.message);
-    }
-    throw error;
+    throw formatAndThrowError(
+      error,
+      "Erro ao fazer login com Google, tente novamente",
+    );
   }
 };
 
@@ -31,7 +31,7 @@ export const login = async (loginData: {
     });
     return data;
   } catch (error) {
-    throw formatAndThrowError(error, "Erro ao fazer login");
+    throw formatAndThrowError(error, "Erro ao fazer login, tente novamente");
   }
 };
 
@@ -49,7 +49,10 @@ export const register = async (registerData: {
 
     return data;
   } catch (error) {
-    throw formatAndThrowError(error, "Erro ao registrar usuário");
+    throw formatAndThrowError(
+      error,
+      "Erro ao registrar usuário, tente novamente",
+    );
   }
 };
 
@@ -59,7 +62,10 @@ export const forgotPassword = async (email: string): Promise<void> => {
       email,
     });
   } catch (error) {
-    throw formatAndThrowError(error, "Erro ao recuperar senha");
+    throw formatAndThrowError(
+      error,
+      "Erro ao recuperar senha, tente novamente",
+    );
   }
 };
 
@@ -73,6 +79,9 @@ export const resetPassword = async (
       token,
     });
   } catch (error) {
-    throw formatAndThrowError(error, "Erro ao redefinir senha");
+    throw formatAndThrowError(
+      error,
+      "Erro ao redefinir senha, tente novamente",
+    );
   }
 };
