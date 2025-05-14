@@ -11,9 +11,10 @@ const RegisterPage = () => {
         <Image
           src="/images/logo-vertical-light.svg"
           alt="Logo Neptus"
-          className="py-6"
-          width={120}
-          height={120}
+          className="w-[120px] h-auto py-6"
+          width="0"
+          height="0"
+          priority
         />
         <h1 className="font-semibold text-2xl">Cadastre sua conta</h1>
         <p className="text-center text-muted-foreground text-sm">
