@@ -10,7 +10,7 @@ const interSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Neptus | Monitoramento da qualidade da água",
+  title: "Neptus",
   description: "Monitoramento da qualidade da água em tanques de peixe.",
   metadataBase: new URL("https://neptus.vercel.app"),
 
