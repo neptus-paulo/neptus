@@ -47,6 +47,7 @@ export const register = async (registerData: {
 
     return data;
   } catch (error) {
+    console.error("DEU ERROOO: ", error);
     throw formatAndThrowError(
       error,
       "Erro ao registrar usuário, tente novamente",
