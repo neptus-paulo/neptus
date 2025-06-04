@@ -7,7 +7,7 @@ import { getQualityColor } from "@/utils/turbidity-util";
 
 import { getSessionData } from "./api/auth/[...nextauth]/options";
 
-const TURBIDITY_VALUE = 20;
+const TURBIDITY_VALUE = 140;
 
 const Home = async () => {
   const session = await getSessionData();
