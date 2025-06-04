@@ -5,7 +5,7 @@ import NavBar from "./NavBar";
 
 const Header = () => {
   return (
-    <header className="flex w-full items-center justify-between px-5 py-4">
+    <header className="flex w-full items-center justify-between px-5 py-5 shadow-[0_2px_5px_0_rgba(0,0,0,0.1)] border-b">
       <Link href="/">
         <Image
           src="/images/neptus-azul.svg"
