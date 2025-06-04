@@ -17,7 +17,7 @@ interface TurbidityResponse {
 }
 
 const TestPage = () => {
-  const [ipAddress, setIpAddress] = useState("192.168.1.100");
+  const [ipAddress, setIpAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<TurbidityResponse | null>(null);
   const [isConnected, setIsConnected] = useState<boolean | null>(null);
@@ -34,7 +34,7 @@ const TestPage = () => {
     setIsConnected(null);
 
     try {
-      const url = `http://${ipAddress}/turbidez`;
+      const url = ipAddress;
       console.log("Fazendo requisição para:", url);
 
       const response = await fetch(url, {
@@ -102,7 +102,7 @@ const TestPage = () => {
               disabled={isLoading}
             />
             <p className="text-sm text-muted-foreground">
-              URL de teste: http://{ipAddress || "IP"}/turbidez
+              URL de teste: {ipAddress}
             </p>
           </div>
 

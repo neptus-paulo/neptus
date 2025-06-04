@@ -1,10 +1,11 @@
 "use client";
 
-import { RefreshCw, Save } from "lucide-react";
+import { RefreshCw, Save, Settings } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import AppButton from "@/components/AppButton";
 import DeviceStatus from "@/components/DeviceStatus";
+import ESP32Config from "@/components/ESP32Config";
 import Header from "@/components/layout/Header";
 import MultiMetricCard from "@/components/MultiMetricCard";
 import { useAuthState } from "@/components/OfflineAuthManager";
@@ -12,7 +13,9 @@ import SensorMetric from "@/components/SensorMetric";
 import TurbidityDisplay from "@/components/TurbidityDisplay";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { turbidityService } from "@/services/turbidity-service";
+import { esp32Service } from "@/services/esp32-service";
 import { useOfflineDataStore } from "@/stores/offlineDataStore";
+import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
 
 interface SensorData {
   dissolvedOxygen: { value: number; unit: string };
@@ -28,6 +31,7 @@ export default function HomeClient() {
   const isOnline = useOnlineStatus();
   const { cachedSensorData, setCachedSensorData, saveReading } =
     useOfflineDataStore();
+  const { config: esp32Config } = useESP32ConfigStore();
 
   const [sensorData, setSensorData] = useState<SensorData>({
     dissolvedOxygen: { value: 8.2, unit: "MG/L" },
@@ -41,14 +45,22 @@ export default function HomeClient() {
   const [turbidityValue, setTurbidityValue] = useState(140);
   const [lastUpdated, setLastUpdated] = useState("8s");
   const [isLoading, setIsLoading] = useState(false);
+  const [showESP32Config, setShowESP32Config] = useState(false);
 
-  // Função para buscar dados da API
+  // Função para buscar dados da API (ESP32)
   const fetchTurbidityData = useCallback(async () => {
     if (!isOnline) return;
 
+    // Verifica se o ESP32 está configurado
+    if (!esp32Config.isConfigured || !esp32Config.ip) {
+      setShowESP32Config(true);
+      return;
+    }
+
     setIsLoading(true);
     try {
-      const response = await turbidityService.getTurbidityData();
+      // Primeiro tenta buscar do ESP32 (simulado)
+      const response = await esp32Service.getTurbidityData(esp32Config.ip, esp32Config.port);
 
       if (response.success) {
         const apiData = response.data;
@@ -84,7 +96,7 @@ export default function HomeClient() {
     } finally {
       setIsLoading(false);
     }
-  }, [isOnline, setCachedSensorData]);
+  }, [isOnline, setCachedSensorData, esp32Config.isConfigured, esp32Config.ip, esp32Config.port]);
 
   // Carregar dados da API quando ficar online
   useEffect(() => {
@@ -192,14 +204,24 @@ export default function HomeClient() {
             </AppButton>
 
             {isOnline && (
-              <AppButton
-                variant="outline"
-                size="lg"
-                onClick={fetchTurbidityData}
-                disabled={isLoading}
-              >
-                <RefreshCw className={isLoading ? "animate-spin" : ""} />
-              </AppButton>
+              <>
+                <AppButton
+                  variant="outline"
+                  size="lg"
+                  onClick={fetchTurbidityData}
+                  disabled={isLoading}
+                >
+                  <RefreshCw className={isLoading ? "animate-spin" : ""} />
+                </AppButton>
+                
+                <AppButton
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setShowESP32Config(true)}
+                >
+                  <Settings />
+                </AppButton>
+              </>
             )}
           </div>
         </div>
@@ -228,6 +250,28 @@ export default function HomeClient() {
           />
         </div>
       </main>
+
+      {/* Modal de Configuração do ESP32 */}
+      {showESP32Config && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <ESP32Config 
+              onConfigSaved={() => {
+                setShowESP32Config(false);
+                fetchTurbidityData();
+              }} 
+            />
+            <div className="mt-4 flex justify-end">
+              <AppButton
+                variant="outline"
+                onClick={() => setShowESP32Config(false)}
+              >
+                Fechar
+              </AppButton>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
