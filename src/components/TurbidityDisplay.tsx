@@ -7,7 +7,7 @@ import { getQualityColor } from "@/utils/turbidity-util";
 const TurbidityDisplay = ({ turbidityValue }: { turbidityValue: number }) => {
   const { color, text } = getQualityColor(turbidityValue);
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-muted border rounded-md relative">
+    <div className="flex flex-col items-center justify-center p-4 bg-muted border rounded-md relative shadow-lg">
       <h2 className="text-2xl font-semibold">Turbidez: {turbidityValue} NTU</h2>
       <p className="text-lg">
         Qualidade: <span className={color}>{text}</span>

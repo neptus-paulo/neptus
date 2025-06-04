@@ -7,7 +7,7 @@ import {
   Waves,
 } from "lucide-react";
 
-import AppButton from "../AppButton";
+import AppButton, { AppButtonLogout } from "../AppButton";
 import {
   Sheet,
   SheetContent,
@@ -47,7 +47,8 @@ const NavBar = () => {
                 Tanques
               </NavLink>
             </div>
-            <div className="px-4">
+            <div className="px-4 space-y-3">
+              <AppButtonLogout />
               <AppButton
                 variant="outline"
                 className="w-full"

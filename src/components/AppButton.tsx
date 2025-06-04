@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
@@ -43,7 +43,18 @@ const AppButton = ({
 };
 
 export const AppButtonLogout = () => {
-  return <AppButton onClick={() => signOut()}>Sair da conta</AppButton>;
+  return (
+    <AppButton
+      variant="outline"
+      className="w-full border-destructive text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:border-destructive"
+      size="lg"
+      tabIndex={-1}
+      onClick={() => signOut({ callbackUrl: "/" })}
+    >
+      <LogOut />
+      <span className="text-base">Sair da conta</span>
+    </AppButton>
+  );
 };
 
 export default AppButton;
