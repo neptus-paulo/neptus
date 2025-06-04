@@ -1,6 +1,7 @@
 import {
   Bolt,
   ChartPie,
+  FlaskConical,
   History,
   MenuIcon,
   RefreshCcw,
@@ -45,6 +46,9 @@ const NavBar = () => {
               </NavLink>
               <NavLink href="/tanques" icon={<Waves />}>
                 Tanques
+              </NavLink>
+              <NavLink href="/teste" icon={<FlaskConical />}>
+                Teste
               </NavLink>
             </div>
             <div className="px-4 space-y-3">

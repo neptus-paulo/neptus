@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import Providers from "@/auth/Providers";
+import DataSyncManager from "@/components/DataSyncManager";
+import OfflineIndicator from "@/components/OfflineIndicator";
 
 const interSans = Inter({
   subsets: ["latin"],
@@ -13,6 +15,16 @@ export const metadata: Metadata = {
   title: "Neptus",
   description: "Monitoramento da qualidade da água em tanques de peixe.",
   metadataBase: new URL("https://neptus.vercel.app"),
+
+  applicationName: "Neptus",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Neptus",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 
   openGraph: {
     title: "Neptus",
@@ -37,7 +49,7 @@ export const metadata: Metadata = {
     other: [
       {
         rel: "manifest",
-        url: "/assets/site.webmanifest",
+        url: "/manifest.json",
       },
       {
         rel: "icon",
@@ -53,6 +65,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    viewportFit: "cover",
+  },
 };
 
 export default function RootLayout({
@@ -62,10 +82,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
+      <head>
+        <meta name="application-name" content="Neptus" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Neptus" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="msapplication-TileColor" content="#0ea5e9" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#0ea5e9" />
+      </head>
       <body
         className={`${interSans.className} antialiased max-w-[430px] mx-auto`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <OfflineIndicator />
+          <DataSyncManager />
+          {children}
+        </Providers>
       </body>
     </html>
   );

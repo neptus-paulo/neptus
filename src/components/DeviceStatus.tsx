@@ -30,8 +30,8 @@ const DeviceStatus = ({
         <div className="space-y-1">
           <p className="text-sm text-foreground/80">Status de conexão</p>
           <Badge
-            data-isConnected={isConnected ? "true" : "false"}
-            className="rounded-full w-full h-6 data-[isConnected=true]:bg-success data-[isConnected=false]:bg-destructive"
+            data-isconnected={isConnected ? "true" : "false"}
+            className="rounded-full w-full h-6 data-[isconnected=true]:bg-success data-[isconnected=false]:bg-destructive"
           >
             {isConnected ? <Link2 /> : <Link2Off />}
 
