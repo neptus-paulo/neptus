@@ -90,9 +90,12 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta name="msapplication-TileColor" content="#0ea5e9" />
+        <meta
+          name="msapplication-TileColor"
+          content="oklch(0.983 0.0225 247.912)"
+        />
         <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#0ea5e9" />
+        <meta name="theme-color" content="oklch(0.983 0.0225 247.912)" />
       </head>
       <body
         className={`${interSans.className} antialiased max-w-[430px] mx-auto`}
