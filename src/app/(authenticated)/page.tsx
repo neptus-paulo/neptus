@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from "react";
 import AppButton from "@/components/AppButton";
 import DeviceStatus from "@/components/DeviceStatus";
 import ESP32Config from "@/components/ESP32Config";
-import Header from "@/components/layout/Header";
 import MultiMetricCard from "@/components/MultiMetricCard";
 import { useAuthState } from "@/components/OfflineAuthManager";
 import SensorMetric from "@/components/SensorMetric";
@@ -25,7 +24,7 @@ interface SensorData {
   isConnected: boolean;
 }
 
-export default function HomeClient() {
+export default function Home() {
   const { isAuthenticated, isLoading: authLoading } = useAuthState();
   const isOnline = useOnlineStatus();
   const { cachedSensorData, setCachedSensorData, saveReading } =
@@ -186,9 +185,7 @@ export default function HomeClient() {
 
   return (
     <>
-      <Header />
-
-      <main className="p-5 space-y-5">
+      <main className="space-y-5">
         <div className="flex-col">
           <h1 className="text-xl font-semibold">Turbidez em tempo real</h1>
           <p className="text-muted-foreground">
@@ -208,7 +205,7 @@ export default function HomeClient() {
               disabled={isLoading}
             >
               <Save />
-              {isOnline ? "Registrar e continuar" : "Salvar offline"}
+              Registrar e continuar
             </AppButton>
 
             {isOnline && (
