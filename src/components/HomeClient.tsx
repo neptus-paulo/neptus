@@ -12,10 +12,9 @@ import { useAuthState } from "@/components/OfflineAuthManager";
 import SensorMetric from "@/components/SensorMetric";
 import TurbidityDisplay from "@/components/TurbidityDisplay";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
-import { turbidityService } from "@/services/turbidity-service";
 import { esp32Service } from "@/services/esp32-service";
-import { useOfflineDataStore } from "@/stores/offlineDataStore";
 import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
+import { useOfflineDataStore } from "@/stores/offlineDataStore";
 
 interface SensorData {
   dissolvedOxygen: { value: number; unit: string };
@@ -60,7 +59,10 @@ export default function HomeClient() {
     setIsLoading(true);
     try {
       // Primeiro tenta buscar do ESP32 (simulado)
-      const response = await esp32Service.getTurbidityData(esp32Config.ip, esp32Config.port);
+      const response = await esp32Service.getTurbidityData(
+        esp32Config.ip,
+        esp32Config.port
+      );
 
       if (response.success) {
         const apiData = response.data;
@@ -96,7 +98,13 @@ export default function HomeClient() {
     } finally {
       setIsLoading(false);
     }
-  }, [isOnline, setCachedSensorData, esp32Config.isConfigured, esp32Config.ip, esp32Config.port]);
+  }, [
+    isOnline,
+    setCachedSensorData,
+    esp32Config.isConfigured,
+    esp32Config.ip,
+    esp32Config.port,
+  ]);
 
   // Carregar dados da API quando ficar online
   useEffect(() => {
@@ -146,7 +154,7 @@ export default function HomeClient() {
     alert(
       isOnline
         ? "Leitura salva e enviada!"
-        : "Leitura salva localmente. Será sincronizada quando voltar online.",
+        : "Leitura salva localmente. Será sincronizada quando voltar online."
     );
   };
 
@@ -213,7 +221,7 @@ export default function HomeClient() {
                 >
                   <RefreshCw className={isLoading ? "animate-spin" : ""} />
                 </AppButton>
-                
+
                 <AppButton
                   variant="outline"
                   size="lg"
@@ -253,13 +261,13 @@ export default function HomeClient() {
 
       {/* Modal de Configuração do ESP32 */}
       {showESP32Config && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <ESP32Config 
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+          <div className="bg-background rounded-lg p-6 w-full max-w-md">
+            <ESP32Config
               onConfigSaved={() => {
                 setShowESP32Config(false);
                 fetchTurbidityData();
-              }} 
+              }}
             />
             <div className="mt-4 flex justify-end">
               <AppButton

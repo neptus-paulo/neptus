@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Settings, Wifi, WifiOff } from "lucide-react";
+import { useState } from "react";
+
 import AppButton from "@/components/AppButton";
-import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
 import { esp32Service } from "@/services/esp32-service";
+import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
 
 interface ESP32ConfigProps {
   onConfigSaved?: () => void;
@@ -15,32 +16,39 @@ export default function ESP32Config({ onConfigSaved }: ESP32ConfigProps) {
   const [ip, setIp] = useState(config.ip);
   const [port, setPort] = useState(config.port);
   const [isLoading, setIsLoading] = useState(false);
-  const [connectionStatus, setConnectionStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+  const [connectionStatus, setConnectionStatus] = useState<
+    "idle" | "testing" | "success" | "error"
+  >("idle");
 
   const handleTestConnection = async () => {
     if (!ip.trim()) {
-      alert('Por favor, digite o IP do ESP32');
+      alert("Por favor, digite o IP do ESP32");
       return;
     }
 
     setIsLoading(true);
-    setConnectionStatus('testing');
+    setConnectionStatus("testing");
 
     try {
-      const isConnected = await esp32Service.testConnection(ip.trim(), port.trim());
-      
+      const isConnected = await esp32Service.testConnection(
+        ip.trim(),
+        port.trim()
+      );
+
       if (isConnected) {
-        setConnectionStatus('success');
+        setConnectionStatus("success");
         setConfig(ip.trim(), port.trim());
         onConfigSaved?.();
-        alert('Conexão com ESP32 estabelecida com sucesso!');
+        alert("Conexão com ESP32 estabelecida com sucesso!");
       } else {
-        setConnectionStatus('error');
-        alert('Não foi possível conectar ao ESP32. Verifique o IP e se o dispositivo está ligado.');
+        setConnectionStatus("error");
+        alert(
+          "Não foi possível conectar ao ESP32. Verifique o IP e se o dispositivo está ligado."
+        );
       }
     } catch (error) {
-      setConnectionStatus('error');
-      alert('Erro ao testar conexão. Verifique se o ESP32 está na mesma rede.');
+      setConnectionStatus("error");
+      alert("Erro ao testar conexão. Verifique se o ESP32 está na mesma rede.");
     } finally {
       setIsLoading(false);
     }
@@ -48,10 +56,10 @@ export default function ESP32Config({ onConfigSaved }: ESP32ConfigProps) {
 
   const handleClearConfig = () => {
     clearConfig();
-    setIp('');
-    setPort('3000');
-    setConnectionStatus('idle');
-    alert('Configuração do ESP32 removida');
+    setIp("");
+    setPort("3000");
+    setConnectionStatus("idle");
+    alert("Configuração do ESP32 removida");
   };
 
   return (
@@ -99,21 +107,23 @@ export default function ESP32Config({ onConfigSaved }: ESP32ConfigProps) {
             disabled={isLoading || !ip.trim()}
             className="flex-1"
           >
-            {connectionStatus === 'testing' ? (
+            {connectionStatus === "testing" ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                 Testando...
               </>
             ) : (
               <>
-                {connectionStatus === 'success' ? (
+                {connectionStatus === "success" ? (
                   <Wifi className="w-4 h-4 mr-2" />
-                ) : connectionStatus === 'error' ? (
+                ) : connectionStatus === "error" ? (
                   <WifiOff className="w-4 h-4 mr-2" />
                 ) : (
                   <Wifi className="w-4 h-4 mr-2" />
                 )}
-                {connectionStatus === 'success' ? 'Conectado' : 'Testar Conexão'}
+                {connectionStatus === "success"
+                  ? "Conectado"
+                  : "Testar Conexão"}
               </>
             )}
           </AppButton>

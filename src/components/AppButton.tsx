@@ -19,7 +19,8 @@ const AppButton = ({
   const variantModifications = {
     default: "",
     destructive: "",
-    outline: "shadow-none border-foreground/15 focus:border-foreground/30",
+    outline:
+      "shadow-none border-foreground/15 focus:border-foreground/30 bg-transparent",
     secondary: "",
     ghost: "",
     link: "",
@@ -33,7 +34,7 @@ const AppButton = ({
       className={cn(
         "cursor-pointer transition-all duration-200",
         variant && variantModifications[variant],
-        className,
+        className
       )}
     >
       {isLoading && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
