@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import AppButton from "@/components/AppButton";
 import DeviceStatus from "@/components/DeviceStatus";
 import ESP32Config from "@/components/ESP32Config";
+import LoadingFullScreen from "@/components/LoadingFullScreen";
 import MultiMetricCard from "@/components/MultiMetricCard";
 import { useAuthState } from "@/components/OfflineAuthManager";
 import SensorMetric from "@/components/SensorMetric";
@@ -34,25 +35,24 @@ export default function Home() {
   const { config: esp32Config } = useESP32ConfigStore();
 
   const [sensorData, setSensorData] = useState<SensorData>({
-    dissolvedOxygen: { value: 8.2, unit: "MG/L" },
-    temperature: { value: 24.5, unit: "ºC" },
-    waterPH: { value: 7.2 },
-    ammonia: { value: 9.2 },
-    battery: 60,
+    dissolvedOxygen: { value: 0, unit: "MG/L" },
+    temperature: { value: 0, unit: "ºC" },
+    waterPH: { value: 0 },
+    ammonia: { value: 0 },
+    battery: 0,
     isConnected: true,
   });
 
-  const [turbidityValue, setTurbidityValue] = useState(140);
+  const [turbidityValue, setTurbidityValue] = useState(0);
   const [lastUpdated, setLastUpdated] = useState("8s");
   const [isLoading, setIsLoading] = useState(false);
   const [showESP32Config, setShowESP32Config] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
 
-  // Função para buscar dados da API (ESP32)
   const fetchTurbidityData = useCallback(async () => {
+    console.log("isOnline", isOnline);
     if (!isOnline) return;
 
-    // Verifica se o ESP32 está configurado
     if (!esp32Config.isConfigured || !esp32Config.ip) {
       setShowESP32Config(true);
       return;
@@ -60,10 +60,10 @@ export default function Home() {
 
     setIsLoading(true);
     try {
-      // Primeiro tenta buscar do ESP32 (simulado)
       const response = await esp32Service.getTurbidityData(
         esp32Config.ip,
-        esp32Config.port
+        esp32Config.port,
+        esp32Config.endpoint
       );
 
       if (response.success) {
@@ -102,20 +102,19 @@ export default function Home() {
     }
   }, [
     isOnline,
-    setCachedSensorData,
     esp32Config.isConfigured,
     esp32Config.ip,
     esp32Config.port,
+    esp32Config.endpoint,
+    setCachedSensorData,
   ]);
 
-  // Carregar dados da API quando ficar online
   useEffect(() => {
     if (isOnline) {
       fetchTurbidityData();
     }
   }, [isOnline, fetchTurbidityData]);
 
-  // Load cached data when offline
   useEffect(() => {
     if (!isOnline && cachedSensorData) {
       setSensorData({
@@ -124,14 +123,13 @@ export default function Home() {
         waterPH: cachedSensorData.waterPH,
         ammonia: cachedSensorData.ammonia,
         battery: cachedSensorData.battery,
-        isConnected: false, // Show as disconnected when offline
+        isConnected: false,
       });
       setTurbidityValue(cachedSensorData.turbidity);
       setLastUpdated("offline");
     }
   }, [isOnline, cachedSensorData]);
 
-  // Cache data when online
   useEffect(() => {
     if (isOnline) {
       const dataToCache = {
@@ -151,22 +149,18 @@ export default function Home() {
       timestamp: Date.now(),
     };
 
-    // const readingId = saveReading(reading);
+    const readingId = saveReading(reading);
+    console.log("Leitura salva com ID:", readingId);
 
-    // Show confirmation
-    // alert(
-    //   isOnline
-    //     ? "Leitura salva e enviada!"
-    //     : "Leitura salva localmente. Será sincronizada quando voltar online."
-    // );
+    alert(
+      isOnline
+        ? "Leitura salva e enviada!"
+        : "Leitura salva localmente. Será sincronizada quando voltar online."
+    );
   };
 
   if (authLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <LoadingFullScreen />;
   }
 
   if (!isAuthenticated) {
@@ -264,7 +258,7 @@ export default function Home() {
         isOpen={isOpenModal}
         onOpenChange={setIsOpenModal}
       />
-      {/* Modal de Configuração do ESP32 */}
+
       {showESP32Config && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
           <div className="bg-background rounded-lg p-6 w-full max-w-md">

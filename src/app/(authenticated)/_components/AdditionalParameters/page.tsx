@@ -38,7 +38,7 @@ const AdditionalParameters = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Parâmetros adicionais</DialogTitle>
           <DialogDescription>
