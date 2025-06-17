@@ -15,6 +15,8 @@ import { esp32Service } from "@/services/esp32-service";
 import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
 import { useOfflineDataStore } from "@/stores/offlineDataStore";
 
+import AdditionalParameters from "./_components/AdditionalParameters/page";
+
 interface SensorData {
   dissolvedOxygen: { value: number; unit: string };
   temperature: { value: number; unit: string };
@@ -44,6 +46,7 @@ export default function Home() {
   const [lastUpdated, setLastUpdated] = useState("8s");
   const [isLoading, setIsLoading] = useState(false);
   const [showESP32Config, setShowESP32Config] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   // Função para buscar dados da API (ESP32)
   const fetchTurbidityData = useCallback(async () => {
@@ -141,20 +144,21 @@ export default function Home() {
   }, [isOnline, sensorData, turbidityValue, setCachedSensorData]);
 
   const handleSaveReading = () => {
+    setIsOpenModal(true);
     const reading = {
       ...sensorData,
       turbidity: turbidityValue,
       timestamp: Date.now(),
     };
 
-    const readingId = saveReading(reading);
+    // const readingId = saveReading(reading);
 
     // Show confirmation
-    alert(
-      isOnline
-        ? "Leitura salva e enviada!"
-        : "Leitura salva localmente. Será sincronizada quando voltar online."
-    );
+    // alert(
+    //   isOnline
+    //     ? "Leitura salva e enviada!"
+    //     : "Leitura salva localmente. Será sincronizada quando voltar online."
+    // );
   };
 
   if (authLoading) {
@@ -256,6 +260,10 @@ export default function Home() {
         </div>
       </main>
 
+      <AdditionalParameters
+        isOpen={isOpenModal}
+        onOpenChange={setIsOpenModal}
+      />
       {/* Modal de Configuração do ESP32 */}
       {showESP32Config && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
