@@ -9,6 +9,7 @@ import ESP32Config from "@/components/ESP32Config";
 import LoadingFullScreen from "@/components/LoadingFullScreen";
 import MultiMetricCard from "@/components/MultiMetricCard";
 import { useAuthState } from "@/components/OfflineAuthManager";
+import PageHeader from "@/components/PageHeader";
 import SensorMetric from "@/components/SensorMetric";
 import TurbidityDisplay from "@/components/TurbidityDisplay";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
@@ -110,11 +111,11 @@ export default function Home() {
     if (isOnline) {
       fetchTurbidityData();
 
-      const interval = setInterval(() => {
-        fetchTurbidityData();
-      }, 3000);
+      // const interval = setInterval(() => {
+      //   fetchTurbidityData();
+      // }, 3000);
 
-      return () => clearInterval(interval);
+      // return () => clearInterval(interval);
     }
   }, [isOnline, fetchTurbidityData]);
 
@@ -164,13 +165,10 @@ export default function Home() {
   return (
     <>
       <main className="space-y-5">
-        <div className="flex-col">
-          <h1 className="text-xl font-semibold">Turbidez em tempo real</h1>
-          <p className="text-muted-foreground">
-            Atualizado há {lastUpdated}
-            {!isOnline && " (dados em cache)"}
-          </p>
-        </div>
+        <PageHeader
+          title="Turbidez em tempo real"
+          description={`Atualizado há ${lastUpdated}`}
+        />
 
         <div className="space-y-3">
           <TurbidityDisplay turbidityValue={turbidityValue} />
