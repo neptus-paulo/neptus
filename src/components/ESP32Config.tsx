@@ -162,7 +162,8 @@ export default function ESP32Config({ onConfigSaved }: ESP32ConfigProps) {
         {config.isConfigured && (
           <div className="p-3 bg-green-50 border border-green-200 rounded-md">
             <p className="text-sm text-green-800">
-              <strong>ESP32 configurado:</strong> {config.ip}:{config.port}
+              <strong>ESP32 configurado:</strong> {config.ip}
+              {config.port ? `:${config.port}` : ""}
               {config.endpoint ? `/${config.endpoint}` : ""}
             </p>
           </div>

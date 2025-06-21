@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Bolt,
   ChartPie,
@@ -7,6 +9,7 @@ import {
   RefreshCcw,
   Waves,
 } from "lucide-react";
+import { useState } from "react";
 
 import AppButton, { AppButtonLogout } from "../AppButton";
 import {
@@ -19,9 +22,15 @@ import {
 import NavLink from "./NavLink";
 
 const NavBar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
+
   return (
     <nav>
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild className="hover:cursor-pointer">
           <MenuIcon className="h-6 w-6" />
         </SheetTrigger>
@@ -35,19 +44,35 @@ const NavBar = () => {
           </SheetHeader>
           <div className="flex flex-col justify-between h-full pb-10">
             <div className="flex flex-col gap-2">
-              <NavLink href="/" icon={<ChartPie />}>
+              <NavLink href="/" icon={<ChartPie />} onClick={handleLinkClick}>
                 Dashboard
               </NavLink>
-              <NavLink href="/historico" icon={<History />}>
+              <NavLink
+                href="/historico"
+                icon={<History />}
+                onClick={handleLinkClick}
+              >
                 Histórico
               </NavLink>
-              <NavLink href="/configuracoes" icon={<Bolt />}>
+              <NavLink
+                href="/configuracoes"
+                icon={<Bolt />}
+                onClick={handleLinkClick}
+              >
                 Configurações
               </NavLink>
-              <NavLink href="/tanques" icon={<Waves />}>
+              <NavLink
+                href="/tanques"
+                icon={<Waves />}
+                onClick={handleLinkClick}
+              >
                 Tanques
               </NavLink>
-              <NavLink href="/teste" icon={<FlaskConical />}>
+              <NavLink
+                href="/teste"
+                icon={<FlaskConical />}
+                onClick={handleLinkClick}
+              >
                 Teste
               </NavLink>
             </div>

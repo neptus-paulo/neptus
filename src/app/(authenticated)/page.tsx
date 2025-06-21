@@ -255,6 +255,7 @@ export default function Home() {
             <div className="mt-4 flex justify-end">
               <AppButton
                 variant="outline"
+                className="w-full"
                 onClick={() => setShowESP32Config(false)}
               >
                 Fechar
