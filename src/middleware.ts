@@ -24,6 +24,7 @@ export default withAuth(
         const { pathname } = req.nextUrl;
 
         const publicRoutes = [
+          "/",
           "/login",
           "/cadastro",
           "/recuperar-senha",

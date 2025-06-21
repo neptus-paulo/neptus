@@ -1,38 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Função para gerar dados simulados de turbidez
+// Função para gerar dados simulados no novo formato do ESP32
 function generateTurbidityData() {
-  // Simula valores de turbidez entre 50 e 200 NTU
-  const turbidity = Math.floor(Math.random() * 150) + 50;
-
-  // Simula outros dados do sensor
-  const sensorData = {
-    turbidity: {
-      value: turbidity,
-      unit: "NTU",
-      status:
-        turbidity < 100 ? "normal" : turbidity < 150 ? "atenção" : "crítico",
-    },
-    dissolvedOxygen: {
-      value: parseFloat((Math.random() * 5 + 5).toFixed(1)), // 5.0 - 10.0 mg/L
-      unit: "MG/L",
-    },
-    temperature: {
-      value: parseFloat((Math.random() * 10 + 20).toFixed(1)), // 20.0 - 30.0 °C
-      unit: "°C",
-    },
-    waterPH: {
-      value: parseFloat((Math.random() * 3 + 6).toFixed(1)), // 6.0 - 9.0 pH
-    },
-    ammonia: {
-      value: parseFloat((Math.random() * 5 + 5).toFixed(1)), // 5.0 - 10.0
-    },
-    battery: Math.floor(Math.random() * 100), // 0 - 100%
-    timestamp: new Date().toISOString(),
-    message: "Dados de turbidez obtidos com sucesso",
+  return {
+    voltagem: parseFloat((Math.random() * 1.5 + 3.0).toFixed(2)), // 3.0 - 4.5 V
+    turbidez: Math.floor(Math.random() * 150) + 50, // 50 - 200 NTU
+    nivel: ["Baixo", "Médio", "Alto"][Math.floor(Math.random() * 3)],
   };
-
-  return sensorData;
 }
 
 // GET - Retorna dados de turbidez
@@ -49,18 +23,18 @@ export async function GET(request: NextRequest) {
         data,
         timestamp: new Date().toISOString(),
       },
-      { status: 200 },
+      { status: 200 }
     );
 
     // Adiciona headers CORS
     response.headers.set("Access-Control-Allow-Origin", "*");
     response.headers.set(
       "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS",
+      "GET, POST, PUT, DELETE, OPTIONS"
     );
     response.headers.set(
       "Access-Control-Allow-Headers",
-      "Content-Type, Authorization",
+      "Content-Type, Authorization"
     );
 
     return response;
@@ -73,7 +47,7 @@ export async function GET(request: NextRequest) {
         message: "Erro interno do servidor",
         error: error instanceof Error ? error.message : "Erro desconhecido",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -105,18 +79,18 @@ export async function POST(request: NextRequest) {
         receivedData: body,
         timestamp: new Date().toISOString(),
       },
-      { status: 201 },
+      { status: 201 }
     );
 
     // Adiciona headers CORS
     response.headers.set("Access-Control-Allow-Origin", "*");
     response.headers.set(
       "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, OPTIONS",
+      "GET, POST, PUT, DELETE, OPTIONS"
     );
     response.headers.set(
       "Access-Control-Allow-Headers",
-      "Content-Type, Authorization",
+      "Content-Type, Authorization"
     );
 
     return response;
@@ -129,7 +103,7 @@ export async function POST(request: NextRequest) {
         message: "Erro ao processar dados",
         error: error instanceof Error ? error.message : "Erro desconhecido",
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 }

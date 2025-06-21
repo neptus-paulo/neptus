@@ -17,8 +17,8 @@ interface ESP32ConfigStore {
 
 const defaultConfig: ESP32Config = {
   ip: "",
-  port: "3000",
-  endpoint: "api/turbidez",
+  port: "",
+  endpoint: "",
   isConfigured: false,
 };
 
@@ -27,11 +27,7 @@ export const useESP32ConfigStore = create<ESP32ConfigStore>()(
     (set, get) => ({
       config: defaultConfig,
 
-      setConfig: (
-        ip: string,
-        port: string = "3000",
-        endpoint: string = "api/turbidez"
-      ) => {
+      setConfig: (ip: string, port: string = "", endpoint: string = "") => {
         set({
           config: {
             ip: ip.trim(),
@@ -51,7 +47,9 @@ export const useESP32ConfigStore = create<ESP32ConfigStore>()(
         if (!config.isConfigured || !config.ip) {
           return "";
         }
-        return `http://${config.ip}:${config.port}/${config.endpoint}`;
+        return `http://${config.ip}:${config.port ? `:${config.port}` : ""}/${
+          config.endpoint
+        }`;
       },
     }),
     {

@@ -12,19 +12,19 @@ import { useAuthState } from "@/components/OfflineAuthManager";
 import SensorMetric from "@/components/SensorMetric";
 import TurbidityDisplay from "@/components/TurbidityDisplay";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
-import { esp32Service } from "@/services/esp32-service";
+import {
+  esp32Service,
+  SensorData as ESP32SensorData,
+} from "@/services/esp32-service";
 import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
 import { useOfflineDataStore } from "@/stores/offlineDataStore";
 
 import AdditionalParameters from "./_components/AdditionalParameters/page";
 
 interface SensorData {
-  dissolvedOxygen: { value: number; unit: string };
-  temperature: { value: number; unit: string };
-  waterPH: { value: number };
-  ammonia: { value: number };
-  battery: number;
-  isConnected: boolean;
+  voltagem: number;
+  turbidez: number;
+  nivel: string;
 }
 
 export default function Home() {
@@ -35,12 +35,16 @@ export default function Home() {
   const { config: esp32Config } = useESP32ConfigStore();
 
   const [sensorData, setSensorData] = useState<SensorData>({
-    dissolvedOxygen: { value: 0, unit: "MG/L" },
-    temperature: { value: 0, unit: "ºC" },
-    waterPH: { value: 0 },
-    ammonia: { value: 0 },
-    battery: 0,
-    isConnected: true,
+    voltagem: 0,
+    turbidez: 0,
+    nivel: "",
+    // oxigenio: { value: 0, unit: "mg/L" },
+    // temperatura: { value: 0, unit: "°C" },
+    // bateria: 0,
+    // phAmmoniaMetrics: [
+    //   { title: "pH", value: 0, unit: "pH" },
+    //   { title: "Amônia", value: 0, unit: "mg/L" },
+    // ],
   });
 
   const [turbidityValue, setTurbidityValue] = useState(0);
@@ -62,34 +66,27 @@ export default function Home() {
     try {
       const response = await esp32Service.getTurbidityData(
         esp32Config.ip,
-        esp32Config.port,
-        esp32Config.endpoint
+        esp32Config.endpoint,
+        esp32Config.port
       );
 
-      if (response.success) {
-        const apiData = response.data;
+      if (response.voltagem !== undefined) {
+        const apiData = response;
 
         setSensorData({
-          dissolvedOxygen: apiData.dissolvedOxygen,
-          temperature: apiData.temperature,
-          waterPH: apiData.waterPH,
-          ammonia: apiData.ammonia,
-          battery: apiData.battery,
-          isConnected: true,
+          voltagem: apiData.voltagem,
+          turbidez: apiData.turbidez,
+          nivel: apiData.nivel,
         });
 
-        setTurbidityValue(apiData.turbidity.value);
+        setTurbidityValue(apiData.turbidez);
         setLastUpdated("agora");
 
         // Cache the new data
         const dataToCache = {
-          dissolvedOxygen: apiData.dissolvedOxygen,
-          temperature: apiData.temperature,
-          waterPH: apiData.waterPH,
-          ammonia: apiData.ammonia,
-          battery: apiData.battery,
-          isConnected: true,
-          turbidity: apiData.turbidity.value,
+          voltagem: apiData.voltagem,
+          turbidez: apiData.turbidez,
+          nivel: apiData.nivel,
           timestamp: Date.now(),
         };
         setCachedSensorData(dataToCache);
@@ -112,20 +109,23 @@ export default function Home() {
   useEffect(() => {
     if (isOnline) {
       fetchTurbidityData();
+
+      const interval = setInterval(() => {
+        fetchTurbidityData();
+      }, 3000);
+
+      return () => clearInterval(interval);
     }
   }, [isOnline, fetchTurbidityData]);
 
   useEffect(() => {
     if (!isOnline && cachedSensorData) {
       setSensorData({
-        dissolvedOxygen: cachedSensorData.dissolvedOxygen,
-        temperature: cachedSensorData.temperature,
-        waterPH: cachedSensorData.waterPH,
-        ammonia: cachedSensorData.ammonia,
-        battery: cachedSensorData.battery,
-        isConnected: false,
+        voltagem: cachedSensorData.voltagem,
+        turbidez: cachedSensorData.turbidez,
+        nivel: cachedSensorData.nivel,
       });
-      setTurbidityValue(cachedSensorData.turbidity);
+      setTurbidityValue(cachedSensorData.turbidez);
       setLastUpdated("offline");
     }
   }, [isOnline, cachedSensorData]);
@@ -134,7 +134,6 @@ export default function Home() {
     if (isOnline) {
       const dataToCache = {
         ...sensorData,
-        turbidity: turbidityValue,
         timestamp: Date.now(),
       };
       setCachedSensorData(dataToCache);
@@ -145,7 +144,6 @@ export default function Home() {
     setIsOpenModal(true);
     const reading = {
       ...sensorData,
-      turbidity: turbidityValue,
       timestamp: Date.now(),
     };
 
@@ -162,24 +160,6 @@ export default function Home() {
   if (authLoading) {
     return <LoadingFullScreen />;
   }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <h1 className="text-xl font-semibold mb-4">Acesso Negado</h1>
-        <p className="text-center text-muted-foreground">
-          {isOnline
-            ? "Você precisa fazer login para acessar esta página."
-            : "Sessão offline expirada. Conecte-se à internet e faça login novamente."}
-        </p>
-      </div>
-    );
-  }
-
-  const phAmmoniaMetrics = [
-    { title: "PH da água", value: sensorData.waterPH.value },
-    { title: "Amônia", value: sensorData.ammonia.value },
-  ];
 
   return (
     <>
@@ -232,23 +212,29 @@ export default function Home() {
         <div className="grid grid-cols-2 grid-rows-2 gap-5">
           <SensorMetric
             title="Oxigênio Dissolvido"
-            value={sensorData.dissolvedOxygen.value}
-            unit={sensorData.dissolvedOxygen.unit}
+            value={6.7}
+            unit={"mg/L"}
             className="col-span-1"
           />
 
           <SensorMetric
             title="Temperatura"
-            value={sensorData.temperature.value}
-            unit={sensorData.temperature.unit}
+            value={27}
+            unit={"ºC"}
             className="col-span-1"
           />
 
-          <MultiMetricCard metrics={phAmmoniaMetrics} className="col-span-1" />
+          <MultiMetricCard
+            metrics={[
+              { title: "pH", value: 7.5 },
+              { title: "Amônia", value: 0.03, unit: "mg/L" },
+            ]}
+            className="col-span-1"
+          />
 
           <DeviceStatus
-            batteryLevel={sensorData.battery}
-            isConnected={isOnline ? sensorData.isConnected : false}
+            batteryLevel={67}
+            isConnected={isOnline ?? false}
             className="col-span-1"
           />
         </div>

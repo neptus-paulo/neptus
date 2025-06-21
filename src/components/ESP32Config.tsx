@@ -35,9 +35,11 @@ export default function ESP32Config({ onConfigSaved }: ESP32ConfigProps) {
     try {
       const isConnected = await esp32Service.testConnection(
         ip.trim(),
-        port.trim(),
-        endpoint.trim()
+        endpoint.trim(),
+        port.trim()
       );
+
+      console.log("Conexão testada:", isConnected);
 
       if (isConnected) {
         setConnectionStatus("success");

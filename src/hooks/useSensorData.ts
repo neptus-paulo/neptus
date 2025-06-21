@@ -1,21 +1,12 @@
 export const useSensorData = () => {
-  // TODO: Trocar os dados simulados por dados reais de uma API
+  // Dados simulados no novo formato do ESP32
   const sensorData = {
-    dissolvedOxygen: { value: 8.2, unit: "MG/L" },
-    temperature: { value: 24.5, unit: "ºC" },
-    waterPH: { value: 7.2 },
-    ammonia: { value: 9.2 },
-    battery: 60,
-    isConnected: false,
+    voltagem: 3.7,
+    turbidez: 42.5,
+    nivel: "Médio",
   };
-
-  const phAmmoniaMetrics = [
-    { title: "PH da água", value: sensorData.waterPH.value },
-    { title: "Amônia", value: sensorData.ammonia.value },
-  ];
 
   return {
     sensorData,
-    phAmmoniaMetrics,
   };
 };

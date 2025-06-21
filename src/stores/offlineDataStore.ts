@@ -2,13 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface SensorReading {
-  dissolvedOxygen: { value: number; unit: string };
-  temperature: { value: number; unit: string };
-  waterPH: { value: number };
-  ammonia: { value: number };
-  battery: number;
-  isConnected: boolean;
-  turbidity: number;
+  voltagem: number;
+  turbidez: number;
+  nivel: string;
   timestamp: number;
 }
 
@@ -62,7 +58,7 @@ export const useOfflineDataStore = create<OfflineDataState>()(
       markReadingAsSynced: (id: string) => {
         set((state) => ({
           savedReadings: state.savedReadings.map((reading) =>
-            reading.id === id ? { ...reading, synced: true } : reading,
+            reading.id === id ? { ...reading, synced: true } : reading
           ),
         }));
       },
@@ -74,7 +70,7 @@ export const useOfflineDataStore = create<OfflineDataState>()(
       clearSyncedReadings: () => {
         set((state) => ({
           savedReadings: state.savedReadings.filter(
-            (reading) => !reading.synced,
+            (reading) => !reading.synced
           ),
         }));
       },
@@ -85,6 +81,6 @@ export const useOfflineDataStore = create<OfflineDataState>()(
     }),
     {
       name: "offline-data-storage",
-    },
-  ),
+    }
+  )
 );
