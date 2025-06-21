@@ -1,4 +1,5 @@
-import DeviceConfigForm from "@/components/forms/DeviceForm";
+import AccountConfigForm from "@/components/forms/AccountConfigForm";
+import DeviceConfigForm from "@/components/forms/DeviceConfigForm";
 import PageHeader from "@/components/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -19,7 +20,7 @@ const Configurations = () => {
           <DeviceConfigForm />
         </TabsContent>
         <TabsContent value="conta">
-          <DeviceConfigForm />
+          <AccountConfigForm />
         </TabsContent>
       </Tabs>
     </main>

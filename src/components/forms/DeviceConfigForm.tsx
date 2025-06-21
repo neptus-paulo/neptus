@@ -12,6 +12,7 @@ import {
   DeviceConfigSchema,
   deviceConfigSchema,
 } from "@/schemas/deviceConfig-schema";
+import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
 import { parseErrorMessage } from "@/utils/error-util";
 
 import AppButton from "../AppButton";
@@ -28,18 +29,19 @@ import { Input } from "../ui/input";
 const DeviceConfigForm = () => {
   const { mutate: register, isError, error, isPending } = useRegister();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const { config } = useESP32ConfigStore();
 
   const deviceConfig = useForm<DeviceConfigSchema>({
     resolver: zodResolver(deviceConfigSchema),
     defaultValues: {
-      ipAddress: "",
+      ipAddress: config.ip || "",
       refreshRate: 4,
       lastMaintenance: undefined,
     },
   });
-  const { control, formState, reset, handleSubmit } = deviceConfig;
+  const { control, formState, handleSubmit } = deviceConfig;
 
-  const handleRegister = (data: DeviceConfigSchema) => {
+  const handleUpdateDevice = (data: DeviceConfigSchema) => {
     console.log("Registering device with data:", data);
     // register(data, { onError: () => reset() });
   };
@@ -54,7 +56,7 @@ const DeviceConfigForm = () => {
     <Form {...deviceConfig}>
       <form
         className="space-y-4 w-full"
-        onSubmit={handleSubmit(handleRegister)}
+        onSubmit={handleSubmit(handleUpdateDevice)}
       >
         <FormField
           control={control}
@@ -102,7 +104,7 @@ const DeviceConfigForm = () => {
                     variant="outline"
                     type="button"
                     data-empty={!field.value}
-                    className="data-[empty=true]:text-muted-foreground justify-start text-left"
+                    className="data-[empty=true]:text-placeholder justify-start text-left"
                   >
                     <History className="text-muted-foreground" />
                     {field.value ? (
