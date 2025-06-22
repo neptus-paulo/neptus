@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { AddTankSchema, addTankSchema } from "@/schemas/addTank-schema";
 
-import ColorRangeSelector from "../ColorRangeSelector";
 import {
   Form,
   FormControl,
@@ -26,23 +25,26 @@ import {
 interface AddTankFormProps {
   onSubmit: (data: AddTankSchema) => void;
   id?: string;
+  initialValues?: Partial<AddTankSchema>;
 }
 
-const AddTankForm = ({ onSubmit, id }: AddTankFormProps) => {
+const AddTankForm = ({ onSubmit, id, initialValues }: AddTankFormProps) => {
   const form = useForm<AddTankSchema>({
     resolver: zodResolver(addTankSchema),
     defaultValues: {
-      name: "",
-      type: "",
-      fish: "",
+      name: initialValues?.name || "",
+      type: initialValues?.type || "",
+      fish: initialValues?.fish || "",
     },
   });
 
   const { handleSubmit, reset, control } = form;
 
   const handleFormSubmit = (data: AddTankSchema) => {
-    reset();
     onSubmit(data);
+    if (!initialValues) {
+      reset();
+    }
   };
 
   return (
@@ -52,7 +54,6 @@ const AddTankForm = ({ onSubmit, id }: AddTankFormProps) => {
         className="space-y-4"
         onSubmit={handleSubmit(handleFormSubmit)}
       >
-        {/* Seletor de cor da água */}
         <FormField
           control={control}
           name="name"
