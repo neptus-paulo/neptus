@@ -53,7 +53,7 @@ const AdditionalParameters = ({
             timestamp={turbidityData.timestamp}
           />
 
-          <TurbidityForm onSubmit={handleSubmit} />
+          <TurbidityForm onSubmit={handleSubmit} id="turbidity-form" />
         </div>
 
         <DialogFooter>

@@ -26,9 +26,10 @@ import {
 
 interface TurbidityFormProps {
   onSubmit: (data: TurbidityFormSchema) => void;
+  id?: string;
 }
 
-const TurbidityForm = ({ onSubmit }: TurbidityFormProps) => {
+const TurbidityForm = ({ onSubmit, id }: TurbidityFormProps) => {
   const form = useForm<TurbidityFormSchema>({
     resolver: zodResolver(turbidityFormSchema),
     defaultValues: {
@@ -68,7 +69,7 @@ const TurbidityForm = ({ onSubmit }: TurbidityFormProps) => {
   return (
     <Form {...form}>
       <form
-        id="turbidity-form"
+        id={id}
         className="space-y-4"
         onSubmit={handleSubmit(handleFormSubmit)}
       >
