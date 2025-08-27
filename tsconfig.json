@@ -25,10 +25,11 @@
   },
   "include": [
     "next-env.d.ts",
+    "types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/lib/react-query-provider.tsx]"
+    "src/lib/react-query-provider.tsx"
   ],
   "exclude": ["node_modules"]
 }
