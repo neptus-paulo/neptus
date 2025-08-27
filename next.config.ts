@@ -6,6 +6,8 @@ const withPWA = withPWAInit({
   dest: "public",
   register: true,
   skipWaiting: true,
+  scope: "/",
+  sw: "sw.js",
   runtimeCaching: [
     {
       urlPattern: /^https?.*/,
@@ -19,6 +21,7 @@ const withPWA = withPWAInit({
     },
   ],
   disable: process.env.NODE_ENV === "development",
+  publicExcludes: ["!robots.txt", "!sitemap.xml"],
 });
 
 const nextConfig: NextConfig = {

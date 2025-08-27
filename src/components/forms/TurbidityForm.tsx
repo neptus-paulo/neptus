@@ -27,18 +27,19 @@ import {
 interface TurbidityFormProps {
   onSubmit: (data: TurbidityFormSchema) => void;
   id?: string;
+  initialValues?: Partial<TurbidityFormSchema>;
 }
 
-const TurbidityForm = ({ onSubmit, id }: TurbidityFormProps) => {
+const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
   const form = useForm<TurbidityFormSchema>({
     resolver: zodResolver(turbidityFormSchema),
     defaultValues: {
-      tank: "",
-      waterColor: 0,
-      oxygen: 0,
-      temperature: 0,
-      ph: 0,
-      ammonia: 0,
+      tank: initialValues?.tank || "",
+      waterColor: initialValues?.waterColor || 0,
+      oxygen: initialValues?.oxygen || 0,
+      temperature: initialValues?.temperature || 0,
+      ph: initialValues?.ph || 0,
+      ammonia: initialValues?.ammonia || 0,
     },
   });
 

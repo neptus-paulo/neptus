@@ -1,112 +1,131 @@
 import axios from "axios";
 
-// Interface para dados do ESP32 no novo formato
-export interface SensorData {
-  voltagem: number;
+import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
+
+export interface ESP32Data {
   turbidez: number;
-  nivel: string;
+  temperatura?: number;
+  ph?: number;
+  timestamp: string;
 }
 
-export const esp32Service = {
-  async getTurbidityData(
-    esp32Ip: string,
-    endpoint: string,
-    port?: string
-  ): Promise<SensorData> {
-    try {
-      // Se for localhost, usar a API do Next.js diretamente
-      if (esp32Ip === "localhost" || esp32Ip === "127.0.0.1") {
-        const response = await axios.get("/api/turbidez", {
-          timeout: 5000,
-        });
-        if (response.data.success) {
-          return response.data.data;
-        }
-        throw new Error("API retornou erro");
-      }
-
-      // Para ESP32 real, construir URL completa
-      const baseUrl = `http://${esp32Ip}${port ? `:${port}` : ""}`;
-      const fullUrl = endpoint.startsWith("/")
-        ? `${baseUrl}${endpoint}`
-        : `${baseUrl}/${endpoint}`;
-
-      console.log("Buscando dados em:", fullUrl);
-
-      const response = await axios.get(fullUrl, {
-        timeout: 5000,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      return response.data;
-    } catch (error) {
-      console.error("Erro ao buscar dados do ESP32:", error);
-      throw error;
-    }
-  },
-
-  // Testar conectividade com ESP32
+class ESP32Service {
   async testConnection(
-    esp32Ip: string,
-    endpoint: string,
-    port?: string
+    ip: string,
+    endpoint: string = "turbidez",
+    port: string = ""
   ): Promise<boolean> {
     try {
-      // Se for localhost, usar a API do Next.js diretamente
-      if (esp32Ip === "localhost" || esp32Ip === "127.0.0.1") {
-        const response = await axios.get("/api/turbidez", {
-          timeout: 5000,
-        });
-        return response.status === 200 && response.data.success;
-      }
+      const portSuffix = port ? `:${port}` : "";
+      const cleanEndpoint = endpoint.replace(/^\/+/, "");
+      const url = `http://${ip}${portSuffix}/${cleanEndpoint}`;
 
-      // Para ESP32 real, construir URL completa
-      const baseUrl = `http://${esp32Ip}${port ? `:${port}` : ""}`;
-      const fullUrl = endpoint.startsWith("/")
-        ? `${baseUrl}${endpoint}`
-        : `${baseUrl}/${endpoint}`;
+      console.log("🔍 Testando conexão com:", url);
 
-      console.log("Testando conexão com:", fullUrl);
-
-      const response = await axios.get(fullUrl, {
+      const response = await axios.get(url, {
         timeout: 5000,
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      console.log("Resposta do teste:", response.status, response.data);
-      return response.status === 200;
-    } catch (error) {
-      console.error("ESP32 não está acessível:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("Detalhes do erro:", {
-          message: error.message,
-          code: error.code,
-          status: error.response?.status,
-          data: error.response?.data,
-          url: error.config?.url,
-        });
+      console.log("📡 Resposta recebida:", response.data);
 
-        // Se for erro de CORS ou rede, tentar usar a API local como fallback
-        if (
-          error.code === "ERR_NETWORK" ||
-          error.code === "ERR_BLOCKED_BY_CLIENT"
-        ) {
-          console.log("Tentando usar API local como fallback...");
-          try {
-            const response = await axios.get("/api/turbidez", {
-              timeout: 5000,
-            });
-            return response.status === 200 && response.data.success;
-          } catch (fallbackError) {
-            console.error("Fallback também falhou:", fallbackError);
-          }
-        }
-      }
+      const isValid =
+        response.status === 200 &&
+        response.data &&
+        typeof response.data.turbidez === "number";
+
+      console.log(
+        "✅ Conexão válida:",
+        isValid,
+        "- Valor turbidez:",
+        response.data.turbidez
+      );
+
+      return isValid;
+    } catch (error) {
+      console.error("❌ Erro no teste de conexão:", error);
       return false;
     }
-  },
-};
+  }
+
+  async getData(
+    ip: string,
+    endpoint: string = "turbidez",
+    port: string = ""
+  ): Promise<ESP32Data> {
+    try {
+      const portSuffix = port ? `:${port}` : "";
+      const cleanEndpoint = endpoint.replace(/^\/+/, "");
+      const url = `http://${ip}${portSuffix}/${cleanEndpoint}`;
+
+      console.log("🌊 Buscando dados de:", url);
+
+      const response = await axios.get(url, {
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("📊 Dados recebidos:", response.data);
+
+      return {
+        turbidez: response.data.turbidez || 0,
+        temperatura: response.data.temperatura,
+        ph: response.data.ph,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (error) {
+      console.error("❌ Erro ao buscar dados do ESP32:", error);
+      throw new Error("Falha na comunicação com ESP32");
+    }
+  }
+
+  async getTurbidityDataFromConfig(): Promise<ESP32Data> {
+    const config = useESP32ConfigStore.getState().config;
+
+    if (!config.isConfigured || !config.ip) {
+      throw new Error("ESP32 não configurado");
+    }
+
+    return this.getData(config.ip, config.endpoint || "turbidez", config.port);
+  }
+
+  getTurbidityLevel(turbidity: number): "low" | "medium" | "high" {
+    if (turbidity <= 5) return "low";
+    if (turbidity <= 25) return "medium";
+    return "high";
+  }
+
+  getTurbidityStatus(turbidity: number): string {
+    const level = this.getTurbidityLevel(turbidity);
+    switch (level) {
+      case "low":
+        return "Ótima";
+      case "medium":
+        return "Boa";
+      case "high":
+        return "Ruim";
+      default:
+        return "Desconhecida";
+    }
+  }
+
+  getTurbidityColor(turbidity: number): string {
+    const level = this.getTurbidityLevel(turbidity);
+    switch (level) {
+      case "low":
+        return "text-green-600";
+      case "medium":
+        return "text-yellow-600";
+      case "high":
+        return "text-red-600";
+      default:
+        return "text-gray-600";
+    }
+  }
+}
+
+export const esp32Service = new ESP32Service();

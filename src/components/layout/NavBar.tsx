@@ -68,13 +68,13 @@ const NavBar = () => {
               >
                 Tanques
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 href="/teste"
                 icon={<FlaskConical />}
                 onClick={handleLinkClick}
               >
                 Teste
-              </NavLink>
+              </NavLink> */}
             </div>
             <div className="px-4 space-y-3">
               <AppButtonLogout />

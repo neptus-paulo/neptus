@@ -5,7 +5,7 @@ import { WifiOff } from "lucide-react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 const OfflineIndicator = () => {
-  const isOnline = useOnlineStatus();
+  const { isOnline } = useOnlineStatus();
 
   if (isOnline) return null;
 

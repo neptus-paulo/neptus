@@ -47,13 +47,28 @@ export const useESP32ConfigStore = create<ESP32ConfigStore>()(
         if (!config.isConfigured || !config.ip) {
           return "";
         }
-        return `http://${config.ip}:${config.port ? `:${config.port}` : ""}/${
-          config.endpoint
-        }`;
+
+        const port = config.port ? `:${config.port}` : "";
+        const endpoint = config.endpoint
+          ? `/${config.endpoint.replace(/^\/+/, "")}`
+          : "";
+
+        return `http://${config.ip}${port}${endpoint}`;
       },
     }),
     {
-      name: "esp32-config-storage",
+      name: "esp32-config-storage", // chave do localStorage
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          if (!str) return null;
+          return JSON.parse(str);
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => localStorage.removeItem(name),
+      },
     }
   )
 );

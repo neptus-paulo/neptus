@@ -11,6 +11,7 @@ interface TurbidityResponse {
   data: SensorData;
 }
 
+// Função para construir URL dinâmica baseada na configuração
 const buildApiUrl = (): string => {
   const config = useESP32ConfigStore.getState().config;
 
@@ -33,28 +34,23 @@ export const turbidityService = {
       const url = buildApiUrl();
       console.log(`🌊 Buscando dados de turbidez: ${url}`);
 
+      // Timeout de 8 segundos para ESP32
       const response: AxiosResponse<SensorData> = await api.get(url, {
         timeout: 8000,
       });
 
       console.log("✅ Dados recebidos:", response.data);
-
       return { data: response.data };
     } catch (error: unknown) {
       console.error("❌ Erro na requisição de turbidez:", error);
 
+      // Tratamento de erros específicos
       if (error instanceof Error && error.message === "ESP32_NOT_CONFIGURED") {
         throw new Error("Dispositivo não configurado");
       }
 
       if (error instanceof Error) {
-        interface AxiosError extends Error {
-          code?: string;
-          name: string;
-          response?: { data?: { message?: string } };
-        }
-
-        const axiosError = error as AxiosError;
+        const axiosError = error as any;
 
         if (
           axiosError.code === "ECONNREFUSED" ||
@@ -77,6 +73,7 @@ export const turbidityService = {
           }
         }
 
+        // Erro genérico
         const errorMessage =
           axiosError.response?.data?.message ||
           error.message ||

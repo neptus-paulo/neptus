@@ -2,13 +2,15 @@
   "name": "Neptus - Monitoramento de Qualidade da Água",
   "short_name": "Neptus",
   "description": "Monitoramento da qualidade da água em tanques de peixe em tempo real",
-  "theme_color": "oklch(0.983 0.0225 247.912)",
-  "background_color": "oklch(0.983 0.0225 247.912)",
+  "theme_color": "#1e40af",
+  "background_color": "#ffffff",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
   "lang": "pt-BR",
+  "id": "neptus-app",
   "icons": [
     {
       "src": "/assets/favicon-16x16.png",
@@ -46,7 +48,8 @@
     {
       "src": "/assets/icon-1024x1024.png",
       "sizes": "1024x1024",
-      "type": "image/png"
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ],
   "categories": ["utilities", "productivity"],
@@ -75,5 +78,6 @@
         }
       ]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }

@@ -6,11 +6,8 @@ import { useEffect, useState } from "react";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useOfflineDataStore } from "@/stores/offlineDataStore";
 
-/**
- * Component to handle data synchronization when coming back online
- */
 export default function DataSyncManager() {
-  const isOnline = useOnlineStatus();
+  const { isOnline } = useOnlineStatus();
   const { getUnsyncedReadings, markReadingAsSynced, clearSyncedReadings } =
     useOfflineDataStore();
   const [syncStatus, setSyncStatus] = useState<
@@ -18,13 +15,11 @@ export default function DataSyncManager() {
   >("idle");
   const [unsyncedCount, setUnsyncedCount] = useState(0);
 
-  // Update unsynced count
   useEffect(() => {
     const unsynced = getUnsyncedReadings();
     setUnsyncedCount(unsynced.length);
   }, [getUnsyncedReadings]);
 
-  // Auto-sync when coming back online
   useEffect(() => {
     const syncData = async () => {
       const unsyncedReadings = getUnsyncedReadings();

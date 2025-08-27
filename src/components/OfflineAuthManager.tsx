@@ -1,54 +1,50 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useOfflineAuthStore } from "@/stores/offlineAuthStore";
 
-/**
- * Component to manage offline authentication state
- * Caches user session when online and provides offline access
- */
 export default function OfflineAuthManager() {
   const { data: session, status } = useSession();
-  const isOnline = useOnlineStatus();
-  const {
-    setOfflineStatus,
-    setCachedUser,
-    validateOfflineSession,
-    offlineSessionValid,
-  } = useOfflineAuthStore();
+  const { isOnline } = useOnlineStatus();
+  const { setOfflineStatus, setCachedUser, validateOfflineSession } =
+    useOfflineAuthStore();
 
-  // Update offline status
-  useEffect(() => {
+  const handleOfflineStatus = useCallback(() => {
     setOfflineStatus(!isOnline);
   }, [isOnline, setOfflineStatus]);
 
-  // Cache user session when online and authenticated
-  useEffect(() => {
+  const handleCacheUser = useCallback(() => {
     if (isOnline && status === "authenticated" && session?.user) {
       setCachedUser(session.user);
     }
-  }, [isOnline, status, session, setCachedUser]);
+  }, [isOnline, status, session?.user, setCachedUser]);
 
-  // Validate offline session when offline
-  useEffect(() => {
+  const handleValidateSession = useCallback(() => {
     if (!isOnline) {
       validateOfflineSession();
     }
   }, [isOnline, validateOfflineSession]);
 
-  // This component doesn't render anything visible
+  useEffect(() => {
+    handleOfflineStatus();
+  }, [handleOfflineStatus]);
+
+  useEffect(() => {
+    handleCacheUser();
+  }, [handleCacheUser]);
+
+  useEffect(() => {
+    handleValidateSession();
+  }, [handleValidateSession]);
+
   return null;
 }
-
-/**
- * Hook to get current authentication state (online or offline)
- */
 export function useAuthState() {
   const { data: session, status } = useSession();
-  const isOnline = useOnlineStatus();
+  const { isOnline } = useOnlineStatus();
   const { cachedUser, offlineSessionValid, isOffline } = useOfflineAuthStore();
 
   if (isOnline) {
@@ -60,7 +56,6 @@ export function useAuthState() {
     };
   }
 
-  // Offline state
   return {
     isAuthenticated: offlineSessionValid && cachedUser !== null,
     user: offlineSessionValid ? cachedUser : null,

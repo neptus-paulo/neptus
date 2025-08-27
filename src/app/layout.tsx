@@ -1,15 +1,26 @@
 import "./globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
 
 import Providers from "@/auth/Providers";
 import DataSyncManager from "@/components/DataSyncManager";
-import OfflineIndicator from "@/components/OfflineIndicator";
+import InstallPWAPrompt from "@/components/InstallPWAPromptWithIOS";
 
 const interSans = Inter({
   subsets: ["latin"],
 });
+
+// Nova forma de definir viewport no Next.js
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#1e40af",
+};
 
 export const metadata: Metadata = {
   title: "Neptus",
@@ -19,8 +30,9 @@ export const metadata: Metadata = {
   applicationName: "Neptus",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: "Neptus",
+    startupImage: "/assets/icon-1024x1024.png",
   },
   formatDetection: {
     telephone: false,
@@ -65,14 +77,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: "cover",
-  },
 };
 
 export default function RootLayout({
@@ -85,24 +89,39 @@ export default function RootLayout({
       <head>
         <meta name="application-name" content="Neptus" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
         <meta name="apple-mobile-web-app-title" content="Neptus" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        <meta
-          name="msapplication-TileColor"
-          content="oklch(0.983 0.0225 247.912)"
-        />
+        <meta name="theme-color" content="#1e40af" />
+        <meta name="msapplication-navbutton-color" content="#1e40af" />
+        <meta name="msapplication-TileColor" content="#1e40af" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="oklch(0.983 0.0225 247.912)" />
       </head>
       <body
         className={`${interSans.className} antialiased max-w-[430px] mx-auto`}
       >
         <Providers>
-          <OfflineIndicator />
           <DataSyncManager />
+          <InstallPWAPrompt />
+          <Toaster
+            position="top-center"
+            richColors
+            closeButton
+            expand={true}
+            visibleToasts={3}
+            toastOptions={{
+              duration: 4000,
+              style: {
+                maxWidth: "400px",
+                padding: "12px 16px",
+              },
+            }}
+          />
           {children}
         </Providers>
       </body>

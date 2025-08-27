@@ -21,7 +21,7 @@ interface ColorRangeSelectorProps {
   className?: string;
 }
 
-const colorRangeData: ColorRangeItem[] = [
+export const colorRangeData: ColorRangeItem[] = [
   {
     color: "#B3E5FC",
     label: "Cristalina",
