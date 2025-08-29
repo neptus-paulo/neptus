@@ -3,12 +3,12 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect } from "react";
 
-import { useInternetStatus } from "@/hooks/useInternetStatus";
+import { useInternetConnection } from "@/hooks/useInternetConnection";
 import { useOfflineAuthStore } from "@/stores/offlineAuthStore";
 
 export default function OfflineAuthManager() {
   const { data: session, status } = useSession();
-  const { isOnline } = useInternetStatus(); // Mudança aqui
+  const { isOnline } = useInternetConnection(); // Hook correto aqui
   const { setOfflineStatus, setCachedUser, validateOfflineSession } =
     useOfflineAuthStore();
 
@@ -51,7 +51,7 @@ export default function OfflineAuthManager() {
 }
 export function useAuthState() {
   const { data: session, status } = useSession();
-  const { isOnline } = useInternetStatus(); // Mudança aqui também
+  const { isOnline } = useInternetConnection(); // Hook correto aqui também
   const { cachedUser, offlineSessionValid, isOffline } = useOfflineAuthStore();
 
   if (isOnline) {

@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-import { useAuthState } from "@/components/OfflineAuthManager";
 import LoadingFullScreen from "@/components/LoadingFullScreen";
+import { useInternetConnection } from "@/hooks/useInternetConnection";
+import { useOfflineAuthStore } from "@/stores/offlineAuthStore";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -12,43 +14,68 @@ interface AuthGuardProps {
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
-  const { isAuthenticated, isLoading, isOffline } = useAuthState();
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [redirecting, setRedirecting] = useState(false);
+  const { data: session, status } = useSession();
+  const { isOnline } = useInternetConnection();
+  const { cachedUser, validateOfflineSession } = useOfflineAuthStore();
+  const [canAccess, setCanAccess] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    // Delay para permitir que as stores sejam hidratadas
-    const timer = setTimeout(() => {
-      setIsInitialized(true);
-    }, 500);
+    const checkAccess = () => {
+      console.log("🔍 AuthGuard verificando acesso:", {
+        status,
+        isOnline,
+        hasSession: !!session,
+        hasCachedUser: !!cachedUser,
+      });
 
-    return () => clearTimeout(timer);
-  }, []);
+      // Se ainda está carregando, espera
+      if (status === "loading") {
+        return;
+      }
 
-  useEffect(() => {
-    if (isInitialized && !isLoading && !isAuthenticated && !redirecting) {
-      console.log("🔒 Não autenticado, redirecionando para login");
-      setRedirecting(true);
+      // Se está online e autenticado, permite
+      if (isOnline && status === "authenticated") {
+        console.log("✅ Online e autenticado");
+        setCanAccess(true);
+        setIsChecking(false);
+        return;
+      }
+
+      // Se está offline, verifica cache
+      if (!isOnline) {
+        const hasValidCache = validateOfflineSession();
+        console.log("📱 Offline - cache válido:", hasValidCache);
+        
+        if (hasValidCache) {
+          setCanAccess(true);
+          setIsChecking(false);
+          return;
+        }
+      }
+
+      // Se está online mas não autenticado, vai para login
+      if (isOnline && status === "unauthenticated") {
+        console.log("🔒 Não autenticado, indo para login");
+        router.push("/login");
+        return;
+      }
+
+      // Fallback: se offline e sem cache válido, vai para login
+      console.log("❌ Sem acesso válido, indo para login");
       router.push("/login");
-    }
-  }, [isInitialized, isLoading, isAuthenticated, router, redirecting]);
+    };
 
-  // Ainda está inicializando ou carregando
-  if (!isInitialized || isLoading) {
+    checkAccess();
+  }, [status, session, isOnline, cachedUser, router, validateOfflineSession]);
+
+  if (isChecking) {
     return <LoadingFullScreen />;
   }
 
-  // Está redirecionando
-  if (redirecting) {
+  if (!canAccess) {
     return <LoadingFullScreen />;
   }
 
-  // Se não está autenticado, mostra loading (vai redirecionar)
-  if (!isAuthenticated) {
-    return <LoadingFullScreen />;
-  }
-
-  // Se chegou aqui, está autenticado (online ou offline)
-  console.log("✅ Usuário autenticado, permitindo acesso", { isOffline });
   return <>{children}</>;
 }

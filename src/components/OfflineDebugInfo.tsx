@@ -4,13 +4,13 @@
 import { useEffect, useState } from "react";
 
 import { useAuthState } from "@/components/OfflineAuthManager";
-import { useInternetStatus } from "@/hooks/useInternetStatus";
+import { useInternetConnection } from "@/hooks/useInternetConnection";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useOfflineAuthStore } from "@/stores/offlineAuthStore";
 
 export default function OfflineDebugInfo() {
   const [isVisible, setIsVisible] = useState(false);
-  const { isOnline: internetOnline } = useInternetStatus();
+  const { isOnline: internetOnline } = useInternetConnection();
   const { isOnline: esp32Online } = useOnlineStatus();
   const authState = useAuthState();
   const {
