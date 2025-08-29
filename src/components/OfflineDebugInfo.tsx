@@ -4,12 +4,14 @@
 import { useEffect, useState } from "react";
 
 import { useAuthState } from "@/components/OfflineAuthManager";
+import { useInternetStatus } from "@/hooks/useInternetStatus";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useOfflineAuthStore } from "@/stores/offlineAuthStore";
 
 export default function OfflineDebugInfo() {
   const [isVisible, setIsVisible] = useState(false);
-  const { isOnline } = useOnlineStatus();
+  const { isOnline: internetOnline } = useInternetStatus();
+  const { isOnline: esp32Online } = useOnlineStatus();
   const authState = useAuthState();
   const {
     cachedUser,
@@ -38,12 +40,14 @@ export default function OfflineDebugInfo() {
       <div className="mb-2 font-bold">Debug Offline</div>
       
       <div className="space-y-1">
-        <div>🌐 Online: {isOnline ? "✅" : "❌"}</div>
-        <div>📶 Navigator Online: {navigator?.onLine ? "✅" : "❌"}</div>
+        <div>🌐 Internet: {internetOnline ? "✅" : "❌"}</div>
+        <div>🔌 ESP32: {esp32Online ? "✅" : "❌"}</div>
+        <div>📶 Navigator: {navigator?.onLine ? "✅" : "❌"}</div>
         <div>📱 Is Offline: {isOffline ? "✅" : "❌"}</div>
         <div>🔐 Auth Valid: {authState.isAuthenticated ? "✅" : "❌"}</div>
         <div>⏱️ Offline Valid: {offlineSessionValid ? "✅" : "❌"}</div>
         <div>👤 Cached User: {cachedUser ? "✅" : "❌"}</div>
+        <div>⏳ Is Loading: {authState.isLoading ? "✅" : "❌"}</div>
         {lastLoginTime && (
           <div>🕐 Login: {new Date(lastLoginTime).toLocaleTimeString()}</div>
         )}

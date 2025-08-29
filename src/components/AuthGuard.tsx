@@ -14,25 +14,32 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading, isOffline } = useAuthState();
   const [isInitialized, setIsInitialized] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    // Pequeno delay para permitir que a store seja hidratada
+    // Delay para permitir que as stores sejam hidratadas
     const timer = setTimeout(() => {
       setIsInitialized(true);
-    }, 100);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (isInitialized && !isLoading && !isAuthenticated) {
-      // Se não está autenticado nem online nem offline, redireciona para login
+    if (isInitialized && !isLoading && !isAuthenticated && !redirecting) {
+      console.log("🔒 Não autenticado, redirecionando para login");
+      setRedirecting(true);
       router.push("/login");
     }
-  }, [isInitialized, isLoading, isAuthenticated, router]);
+  }, [isInitialized, isLoading, isAuthenticated, router, redirecting]);
 
-  // Mostra loading enquanto verifica autenticação
+  // Ainda está inicializando ou carregando
   if (!isInitialized || isLoading) {
+    return <LoadingFullScreen />;
+  }
+
+  // Está redirecionando
+  if (redirecting) {
     return <LoadingFullScreen />;
   }
 
@@ -42,5 +49,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   // Se chegou aqui, está autenticado (online ou offline)
+  console.log("✅ Usuário autenticado, permitindo acesso", { isOffline });
   return <>{children}</>;
 }

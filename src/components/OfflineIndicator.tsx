@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { WifiOff, Wifi } from "lucide-react";
 
-import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useInternetStatus } from "@/hooks/useInternetStatus";
 import { useOfflineAuthStore } from "@/stores/offlineAuthStore";
 
 const OfflineIndicator = () => {
-  const { isOnline } = useOnlineStatus();
+  const { isOnline } = useInternetStatus(); // Mudança aqui
   const { isOffline, cachedUser, offlineSessionValid } = useOfflineAuthStore();
   const [showOfflineMessage, setShowOfflineMessage] = useState(false);
 
