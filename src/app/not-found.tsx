@@ -9,7 +9,7 @@ const NotFoundPage = () => {
       <div className="text-center space-y-6 max-w-md">
         <div className="space-y-2">
           <h1 className="text-6xl font-bold">404</h1>
-          <h2 className="text-2xl font-semibold">Página não encontrada</h2>
+          <h2 className="text-2xl font-semibold">Página não encontrada.</h2>
           <p className="text-muted-foreground">
             Ops! A página que você está procurando não existe.
           </p>
