@@ -45,17 +45,25 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
       validateOfflineSession: () => {
         const { cachedUser, lastLoginTime } = get();
 
+        console.log("🔍 Validando sessão offline:", { cachedUser: !!cachedUser, lastLoginTime });
+
         if (!cachedUser || !lastLoginTime) {
           set({ offlineSessionValid: false });
+          console.log("❌ Sessão offline inválida: sem usuário ou timestamp");
           return false;
         }
 
         const now = Date.now();
-        const isValid = now - lastLoginTime < OFFLINE_SESSION_DURATION;
+        const timeDiff = now - lastLoginTime;
+        const isValid = timeDiff < OFFLINE_SESSION_DURATION;
+
+        console.log(`⏰ Tempo desde último login: ${Math.floor(timeDiff / (1000 * 60))} minutos`);
+        console.log(`✅ Sessão válida: ${isValid}`);
 
         set({ offlineSessionValid: isValid });
 
         if (!isValid) {
+          console.log("🧹 Limpando sessão expirada");
           // Clear expired session
           set({
             cachedUser: null,
@@ -79,6 +87,7 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
       partialize: (state) => ({
         cachedUser: state.cachedUser,
         lastLoginTime: state.lastLoginTime,
+        offlineSessionValid: state.offlineSessionValid,
       }),
     },
   ),

@@ -161,7 +161,22 @@ export const useOnlineStatus = () => {
   const { config } = useESP32ConfigStore();
 
   useEffect(() => {
+    // Verificar status de conectividade real da internet
+    const checkNetworkStatus = () => {
+      return navigator.onLine;
+    };
+
     const checkInitialState = async () => {
+      const hasInternetConnection = checkNetworkStatus();
+      
+      if (!hasInternetConnection) {
+        // Se não tem internet, assume offline
+        setIsOnline(false);
+        setNeedsConfiguration(false);
+        stopAllChecks();
+        return;
+      }
+
       if (!hasValidConfig(config)) {
         setNeedsConfiguration(true);
         setIsOnline(false);
@@ -177,9 +192,31 @@ export const useOnlineStatus = () => {
       setIsOnline(connected);
     };
 
+    // Listeners para mudanças de conectividade
+    const handleOnline = () => {
+      console.log("🌐 Voltou online");
+      checkInitialState();
+    };
+
+    const handleOffline = () => {
+      console.log("📵 Ficou offline");
+      setIsOnline(false);
+      stopAllChecks();
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
     checkInitialState();
 
     const stateMonitor = setInterval(() => {
+      const hasInternet = checkNetworkStatus();
+      
+      if (!hasInternet) {
+        setIsOnline(false);
+        return;
+      }
+
       const currentlyOnline = globalState === "connected";
       const currentlyNeedsConfig = !hasValidConfig(config);
 
@@ -189,6 +226,8 @@ export const useOnlineStatus = () => {
 
     return () => {
       clearInterval(stateMonitor);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, [config]);
 

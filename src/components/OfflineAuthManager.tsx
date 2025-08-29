@@ -23,10 +23,17 @@ export default function OfflineAuthManager() {
   }, [isOnline, status, session?.user, setCachedUser]);
 
   const handleValidateSession = useCallback(() => {
+    // Sempre valida a sessão offline quando não está online
     if (!isOnline) {
-      validateOfflineSession();
+      const isValid = validateOfflineSession();
+      console.log("🔒 Validação sessão offline:", isValid);
     }
   }, [isOnline, validateOfflineSession]);
+
+  // Executa validação inicial na montagem do componente
+  useEffect(() => {
+    validateOfflineSession();
+  }, [validateOfflineSession]);
 
   useEffect(() => {
     handleOfflineStatus();
