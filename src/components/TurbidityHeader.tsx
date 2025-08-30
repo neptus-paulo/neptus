@@ -16,7 +16,7 @@ const TurbidityHeader = ({
 }: TurbidityHeaderProps) => {
   const getQualityColor = (quality: string) => {
     switch (quality) {
-      case "Bom":
+      case "Boa":
         return "text-success";
       case "Regular":
         return "text-warning";
@@ -30,7 +30,7 @@ const TurbidityHeader = ({
   return (
     <div className="grid grid-cols-5 p-4 bg-muted border rounded-md relative">
       <div className="flex flex-col col-span-3 border-r border-foreground/20">
-        <h2 className="text-lg font-semibold">Turbidez {turbidityValue}NTU</h2>
+        <h2 className="text-lg font-semibold">Turbidez {turbidityValue} NTU</h2>
         <p className="text-md">
           Qualidade: <span className={getQualityColor(quality)}>{quality}</span>
         </p>

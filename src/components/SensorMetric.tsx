@@ -4,7 +4,7 @@ import Box from "./Box";
 
 interface SensorMetricProps {
   title: string;
-  value: string | number;
+  value?: string | number;
   unit?: string;
   children?: ReactNode;
   className?: string;
@@ -21,7 +21,7 @@ const SensorMetric = ({
     <Box className={className}>
       <h3 className="font-semibold text-muted-foreground">{title}</h3>
       <p className="text-2xl font-semibold mt-3">
-        {value} {unit}
+        {value === undefined ? "--" : value} {unit}
       </p>
       {children}
     </Box>

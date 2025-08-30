@@ -18,10 +18,19 @@ interface HistoryItemProps {
   oxygen: number;
   ph: number;
   ammonia: number;
-  waterColor: string;
+  waterColor: number;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
+
+const imageTanksList = [
+  "/images/tanque4.jpg",
+  "/images/tanque6.jpg",
+  "/images/tanque3.jpg",
+  "/images/tanque2.jpg",
+  "/images/tanque1.jpg",
+  "/images/tanque5.jpg",
+];
 
 const HistoryItem = ({
   id,
@@ -96,7 +105,14 @@ const HistoryItem = ({
             <p className="text-sm underline">Cor da água:</p>
             <div
               className="w-5 h-5 rounded-sm border border-border"
-              style={{ backgroundColor: waterColor }}
+              // style={{ backgroundColor: waterColor }}
+              style={{
+                backgroundImage: waterColor
+                  ? `url(${imageTanksList[waterColor as number]})`
+                  : undefined,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
             />
           </div>
         </div>

@@ -7,8 +7,8 @@ import { Toaster } from "sonner";
 import Providers from "@/auth/Providers";
 import DataSyncManager from "@/components/DataSyncManager";
 import InstallPWAPrompt from "@/components/InstallPWAPromptWithIOS";
-import OfflineIndicator from "@/components/OfflineIndicator";
 import OfflineDebugInfo from "@/components/OfflineDebugInfo";
+import OfflineIndicator from "@/components/OfflineIndicator";
 
 const interSans = Inter({
   subsets: ["latin"],
@@ -111,7 +111,7 @@ export default function RootLayout({
           <OfflineIndicator />
           <DataSyncManager />
           <InstallPWAPrompt />
-          <OfflineDebugInfo />
+          {/* <OfflineDebugInfo /> */}
           <Toaster
             position="top-center"
             richColors

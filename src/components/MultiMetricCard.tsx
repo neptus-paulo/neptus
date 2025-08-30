@@ -2,7 +2,7 @@ import Box from "./Box";
 
 interface Metric {
   title: string;
-  value: string | number;
+  value?: string | number;
   unit?: string;
 }
 
@@ -21,7 +21,7 @@ const MultiMetricCard = ({ metrics, className }: MultiMetricCardProps) => {
               {metric.title}
             </h3>
             <p className="text-2xl font-semibold mt-3">
-              {metric.value} {metric.unit}
+              {metric.value === undefined ? "--" : metric.value} {metric.unit}
             </p>
           </div>
         ))}

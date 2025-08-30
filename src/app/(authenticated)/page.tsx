@@ -1,6 +1,7 @@
 "use client";
 
 import { RefreshCw, Save, Settings } from "lucide-react";
+import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
 import { useCallback, useEffect, useState } from "react";
 
 import AppButton from "@/components/AppButton";
@@ -26,6 +27,11 @@ export default function Home() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
 
+  const [storedData, setStoredData] = useState<{
+    turbidityValue: number;
+    timestamp: string;
+  } | null>(null);
+
   // Valor da turbidez para exibição
   const turbidityValue = sensorData?.turbidez || 0;
 
@@ -43,6 +49,11 @@ export default function Home() {
     if (!sensorData) return;
     setIsOpenModal(true);
     // TODO: Implementar salvamento quando necessário
+    localStorage.setItem(
+      "turbidityData",
+      JSON.stringify({ turbidityValue, timestamp: new Date().toISOString() })
+    );
+    setStoredData({ turbidityValue, timestamp: new Date().toISOString() });
   };
 
   if (authLoading) {
@@ -93,22 +104,22 @@ export default function Home() {
         <div className="grid grid-cols-2 grid-rows-2 gap-5">
           <SensorMetric
             title="Oxigênio Dissolvido"
-            value={6.7}
+            value={undefined}
             unit={"mg/L"}
             className="col-span-1"
           />
 
           <SensorMetric
             title="Temperatura"
-            value={27}
+            value={undefined}
             unit={"ºC"}
             className="col-span-1"
           />
 
           <MultiMetricCard
             metrics={[
-              { title: "pH", value: 7.5 },
-              { title: "Amônia", value: 0.03, unit: "mg/L" },
+              { title: "pH", value: undefined },
+              { title: "Amônia", value: undefined, unit: "mg/L" },
             ]}
             className="col-span-1"
           />
@@ -124,6 +135,7 @@ export default function Home() {
       <AdditionalParameters
         isOpen={isOpenModal}
         onOpenChange={setIsOpenModal}
+        storedData={storedData}
       />
 
       <ESP32Config

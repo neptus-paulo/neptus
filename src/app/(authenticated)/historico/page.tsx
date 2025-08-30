@@ -23,57 +23,43 @@ import {
 } from "@/components/ui/dialog";
 import { TurbidityFormSchema } from "@/schemas/turbidity-schema";
 
-// Dados mock para exemplo
-const historyData = [
-  {
-    id: "1",
-    time: "10:30",
-    date: "18/03/2025",
-    tankName: "Tanque de Tilápia 1",
-    turbidity: 38,
-    temperature: 28.2,
-    quality: "Bom" as const,
-    oxygen: 6.7,
-    ph: 7.1,
-    ammonia: 0.03,
-    waterColor: colorRangeData[1].color,
-  },
-  {
-    id: "2",
-    time: "14:15",
-    date: "17/03/2025",
-    tankName: "Tanque de Tambaqui 2",
-    turbidity: 45,
-    temperature: 26.8,
-    quality: "Regular" as const,
-    oxygen: 5.9,
-    ph: 6.8,
-    ammonia: 0.05,
-    waterColor: colorRangeData[3].color,
-  },
-  {
-    id: "3",
-    time: "09:00",
-    date: "16/03/2025",
-    tankName: "Tanque de Carpa 3",
-    turbidity: 80,
-    temperature: 27.5,
-    quality: "Ruim" as const,
-    oxygen: 4.5,
-    ph: 6.5,
-    ammonia: 0.1,
-    waterColor: colorRangeData[4].color,
-  },
-];
+// Busca os dados do localStorage
+function getHistoryDataFromStorage() {
+  if (typeof window === "undefined") return [];
+  const data = localStorage.getItem("storagedTurbidityData");
+  if (!data) return [];
+  try {
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+const mapStorageToHistoryItem = (item: any) => ({
+  id: item.id,
+  time: item.turbidityData?.timestamp?.time || "--:--",
+  date: item.turbidityData?.timestamp?.date || "--/--/--",
+  tankName: item.tank || "-",
+  turbidity: item.turbidityData?.value ?? 0,
+  temperature: item.temperature ?? 0,
+  quality: item.turbidityData?.quality || "-",
+  oxygen: item.oxygen ?? 0,
+  ph: item.ph ?? 0,
+  ammonia: item.ammonia ?? 0,
+  waterColor: item.waterColor ?? 0,
+});
 
 const History = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedItemId, setSelectedItemId] = useState<string>("");
-  const [selectedItem, setSelectedItem] = useState<
-    (typeof historyData)[0] | null
-  >(null);
+  const [historyData, setHistoryData] = useState<any[]>([]);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  React.useEffect(() => {
+    setHistoryData(getHistoryDataFromStorage().map(mapStorageToHistoryItem));
+  }, []);
 
   const handleEdit = (id: string) => {
     const item = historyData.find((item) => item.id === id);
@@ -89,13 +75,22 @@ const History = () => {
   };
 
   const confirmDelete = () => {
-    console.log("Deletando item:", selectedItemId);
+    // Remove do localStorage
+    const updated = historyData.filter((item) => item.id !== selectedItemId);
+    localStorage.setItem("storagedTurbidityData", JSON.stringify(updated));
+    setHistoryData(updated);
     setIsDeleteDialogOpen(false);
     setSelectedItemId("");
   };
 
   const handleEditSubmit = (data: TurbidityFormSchema) => {
-    console.log("Editando item:", selectedItem?.id, data);
+    // Atualiza o item editado
+    if (!selectedItem) return;
+    const updated = historyData.map((item) =>
+      item.id === selectedItem.id ? { ...item, ...data } : item
+    );
+    localStorage.setItem("storagedTurbidityData", JSON.stringify(updated));
+    setHistoryData(updated);
     setIsEditDialogOpen(false);
     setSelectedItem(null);
   };
@@ -193,10 +188,11 @@ const History = () => {
                 selectedItem
                   ? {
                       tank: selectedItem.tankName,
-                      waterColor: parseInt(
-                        selectedItem.waterColor.replace("#", ""),
-                        16
-                      ),
+                      // waterColor: parseInt(
+                      //   selectedItem.waterColor.replace("#", ""),
+                      //   16
+                      // ),
+                      waterColor: selectedItem.waterColor,
                       oxygen: selectedItem.oxygen,
                       temperature: selectedItem.temperature,
                       ph: selectedItem.ph,

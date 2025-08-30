@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/tooltip";
 
 interface ColorRangeItem {
-  color: string;
+  id: number;
+  color?: string;
   label: string;
   description: string;
+  imageUrl?: string;
 }
 
 interface ColorRangeSelectorProps {
@@ -23,45 +25,59 @@ interface ColorRangeSelectorProps {
 
 export const colorRangeData: ColorRangeItem[] = [
   {
-    color: "#B3E5FC",
+    // color: "#B3E5FC",
+    id: 1,
+    imageUrl: "/images/tanque4.jpg",
     label: "Cristalina",
     description: "Água limpa, baixa turbidez",
   },
   {
-    color: "#A5D6A7",
+    id: 2,
+    // color: "#A5D6A7",
+    imageUrl: "/images/tanque6.jpg",
     label: "Clara",
     description: "Fitoplâncton leve, condição boa",
   },
   {
-    color: "#66BB6A",
+    id: 3,
+    // color: "#66BB6A",
+    imageUrl: "/images/tanque3.jpg",
     label: "Ligeiramente turva",
     description: "Fitoplâncton equilibrado, condição ideal",
   },
   {
-    color: "#558B2F",
+    id: 4,
+    // color: "#558B2F",
+    imageUrl: "/images/tanque2.jpg",
     label: "Turva",
     description: "Fitoplâncton em excesso, contém matéria orgânica",
   },
   {
-    color: "#8D6E63",
+    id: 5,
+    // color: "#8D6E63",
+    imageUrl: "/images/tanque1.jpg",
     label: "Muito turva",
     description: "Alerta, presença de sedimentos orgânicos",
   },
   {
-    color: "#5D4037",
+    id: 6,
+    // color: "#5D4037",
+    imageUrl: "/images/tanque5.jpg",
     label: "Escura",
     description: "Risco elevado, pouca penetração de luz",
   },
-  {
-    color: "#9E9E9E",
-    label: "Acinzentada",
-    description: "Contém resíduos minerais, pode afetar a fauna",
-  },
-  {
-    color: "#212121",
-    label: "Opaca",
-    description: "Crítico, alta concentração de poluentes",
-  },
+  // {
+  //   // color: "#9E9E9E",
+  //   imageUrl: "/images/tanque1.jpg",
+  //   label: "Acinzentada",
+  //   description: "Contém resíduos minerais, pode afetar a fauna",
+  // },
+  // {
+  //   // color: "#212121",
+  //   imageUrl: "/images/tanque1.jpg",
+  //   label: "Opaca",
+  //   description: "Crítico, alta concentração de poluentes",
+  // },
 ];
 
 const ColorRangeSelector = ({
@@ -101,11 +117,18 @@ const ColorRangeSelector = ({
                           : "border-muted-foreground/30"
                       }
                     `}
-                    style={{ backgroundColor: item.color }}
+                    // style={{ backgroundColor: item.color }}
+                    style={{
+                      backgroundImage: item.imageUrl
+                        ? `url(${item.imageUrl})`
+                        : undefined,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
                     aria-label={`${item.label}: ${item.description}`}
                   />
                 </TooltipTrigger>
-                <TooltipContent className="bg-foreground [&>span>svg]:bg-foreground [&>span>svg]:fill-foreground">
+                {/* <TooltipContent className="bg-foreground [&>span>svg]:bg-foreground [&>span>svg]:fill-foreground">
                   <div className="flex flex-col">
                     <div className="font-semibold text-background">
                       {item.label}
@@ -114,18 +137,18 @@ const ColorRangeSelector = ({
                       {item.description}
                     </div>
                   </div>
-                </TooltipContent>
+                </TooltipContent> */}
               </Tooltip>
             ))}
           </div>
         </TooltipProvider>
 
-        {value >= 0 && value < colorRangeData.length && (
+        {/* {value >= 0 && value < colorRangeData.length && (
           <div className="text-sm text-muted-foreground">
             Selecionado:{" "}
             <span className="font-medium">{colorRangeData[value].label}</span>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -112,10 +112,8 @@ const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
                   </SelectTrigger>
                   <SelectContent>
                     {/* TODO: Inserir a lista real de tanques */}
-                    <SelectItem value="tank1">Tanque 1</SelectItem>
-                    <SelectItem value="tank2">Tanque 2</SelectItem>
-                    <SelectItem value="tank3">Tanque 3</SelectItem>
-                    <SelectItem value="tank4">Tanque 4</SelectItem>
+                    <SelectItem value="Tanque 1">Tanque 1</SelectItem>
+                    <SelectItem value="Tanque 2">Tanque 2</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>
