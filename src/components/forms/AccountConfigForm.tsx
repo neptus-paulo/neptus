@@ -8,7 +8,6 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useRegister } from "@/hooks/useRegister";
 import {
   AccountConfigSchema,
   accountConfigSchema,
@@ -27,7 +26,6 @@ import {
 import { Input } from "../ui/input";
 
 const AccountConfigForm = () => {
-  const { mutate: register, isError, error, isPending } = useRegister();
   const { data } = useSession();
 
   const accountConfig = useForm<AccountConfigSchema>({
@@ -40,8 +38,8 @@ const AccountConfigForm = () => {
   const { control, formState, handleSubmit } = accountConfig;
 
   const handleUpdateAccount = (data: AccountConfigSchema) => {
-    console.log("Registering device with data:", data);
-    // register(data, { onError: () => reset() });
+    console.log("Updating account with data:", data);
+    // Implementar lógica de atualização da conta aqui
   };
 
   return (
@@ -87,15 +85,10 @@ const AccountConfigForm = () => {
           type="submit"
           className="w-full"
           size="lg"
-          isLoading={formState.isSubmitting || isPending}
+          isLoading={formState.isSubmitting}
         >
           Salvar
         </AppButton>
-        {isError && (
-          <p className="text-error text-sm text-center">
-            {parseErrorMessage(error)}
-          </p>
-        )}
       </form>
     </Form>
   );

@@ -1,8 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import LoginForm from "@/components/forms/LoginForm";
-import LoginWithGoogleButton from "@/components/LoginWithGoogleButton";
 
 const LoginPage = () => {
   return (
@@ -24,28 +22,6 @@ const LoginPage = () => {
       </div>
 
       <LoginForm />
-
-      <div className="flex items-center gap-2 w-full">
-        <div className="h-[1px] bg-muted-foreground w-full" />
-        <p className="text-muted-foreground text-sm w-full text-center">
-          ou entre com
-        </p>
-        <div className="h-[1px] bg-muted-foreground w-full" />
-      </div>
-
-      <LoginWithGoogleButton className="w-full" variant="outline">
-        Entrar com Google
-      </LoginWithGoogleButton>
-
-      <p className="text-muted-foreground text-sm">
-        Não tem uma conta?{" "}
-        <Link
-          href="/cadastro"
-          className="text-primary hover:text-foreground underline"
-        >
-          Crie uma agora
-        </Link>
-      </p>
     </div>
   );
 };

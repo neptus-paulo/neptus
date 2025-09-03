@@ -7,7 +7,6 @@ import { History, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { useRegister } from "@/hooks/useRegister";
 import {
   DeviceConfigSchema,
   deviceConfigSchema,
@@ -27,7 +26,6 @@ import {
 import { Input } from "../ui/input";
 
 const DeviceConfigForm = () => {
-  const { mutate: register, isError, error, isPending } = useRegister();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { config } = useESP32ConfigStore();
 
@@ -42,8 +40,8 @@ const DeviceConfigForm = () => {
   const { control, formState, handleSubmit } = deviceConfig;
 
   const handleUpdateDevice = (data: DeviceConfigSchema) => {
-    console.log("Registering device with data:", data);
-    // register(data, { onError: () => reset() });
+    console.log("Updating device with data:", data);
+    // Implementar lógica de atualização do dispositivo aqui
   };
 
   const handleRefresh = (onChange: (value: number) => void) => {
@@ -138,15 +136,10 @@ const DeviceConfigForm = () => {
           type="submit"
           className="w-full"
           size="lg"
-          isLoading={formState.isSubmitting || isPending}
+          isLoading={formState.isSubmitting}
         >
           Salvar
         </AppButton>
-        {isError && (
-          <p className="text-error text-sm text-center">
-            {parseErrorMessage(error)}
-          </p>
-        )}
       </form>
     </Form>
   );

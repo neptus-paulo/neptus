@@ -5,7 +5,6 @@ export const errorCodes = {
   NOT_FOUND_REQUEST_ERROR: "NotFoundRequestError",
   TOKEN_EXPIRED: "TokenExpired",
   CONFLICT_REQUEST_ERROR: "ConflictRequestError",
-  GOOGLE_LOGIN_REQUEST_ERROR: "GoogleLoginRequestError",
   USER_DISABLED_ERROR: "UserDisabledError",
 } as const;
 
@@ -19,8 +18,6 @@ export const getFriendlyMessage = (error: ApiError | Error): string => {
       "Usuário ainda não cadastrado, tente novamente",
     [errorCodes.TOKEN_EXPIRED]: "Sessão expirada. Faça login novamente",
     [errorCodes.CONFLICT_REQUEST_ERROR]: "Email já cadastrado, faça o login",
-    [errorCodes.GOOGLE_LOGIN_REQUEST_ERROR]:
-      "Usuário cadastrado via Google, use o login com Google",
     [errorCodes.USER_DISABLED_ERROR]:
       "Usuário está desativado, entre em contato com o suporte",
   };

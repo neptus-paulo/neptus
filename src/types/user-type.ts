@@ -3,7 +3,6 @@ import { Property } from "./property-type";
 export type User = {
   created_at: string;
   email: string;
-  google_login: boolean;
   id: string;
   is_active: boolean;
   is_admin: boolean;
@@ -19,12 +18,6 @@ export type LoginResponse = {
   mensagem: string;
   refresh_token: string;
   usuario: UserSession;
-};
-
-export type RegisterResponse = {
-  access_token: string;
-  refresh_token: string;
-  messagem: string;
 };
 
 export type UserSession = {
