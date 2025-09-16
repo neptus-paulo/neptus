@@ -18,7 +18,7 @@ interface TurbidityResponse {
 }
 
 class ESP32Service {
-  private buildDirectUrl(): string {
+  private buildUrl(): string {
     const config = useESP32ConfigStore.getState().config;
 
     if (!config.isConfigured || !config.ip) {
@@ -32,16 +32,6 @@ class ESP32Service {
       : "/turbidez";
 
     return `https://${baseUrl}${port}${endpoint}`;
-  }
-
-  private buildProxyUrl(): string {
-    const directUrl = this.buildDirectUrl();
-    return `/api/esp32/proxy?url=${encodeURIComponent(directUrl)}`;
-  }
-
-  private isProduction(): boolean {
-    if (typeof window === "undefined") return false;
-    return window.location.protocol === "https:";
   }
 
   async testConnection(
@@ -89,27 +79,16 @@ class ESP32Service {
 
   async getTurbidityData(): Promise<TurbidityResponse> {
     try {
-      const useProxy = this.isProduction();
-      const url = useProxy ? this.buildProxyUrl() : this.buildDirectUrl();
+      const url = this.buildUrl();
 
       console.log(`📡 Fazendo requisição para: ${url}`);
 
-      let response;
-
-      if (useProxy) {
-        // Em produção (HTTPS), usa o proxy
-        response = await api.get(url, {
-          timeout: 15000,
-        });
-      } else {
-        // Em desenvolvimento (HTTP), faz chamada direta
-        response = await api.get(url, {
-          timeout: 10000,
-          validateStatus: function (status) {
-            return status >= 200 && status < 300;
-          },
-        });
-      }
+      const response = await api.get(url, {
+        timeout: 10000,
+        validateStatus: function (status) {
+          return status >= 200 && status < 300;
+        },
+      });
 
       console.log("✅ Resposta recebida:", response.data);
       return { data: response.data };
@@ -138,22 +117,6 @@ class ESP32Service {
 
         const axiosError = error as AxiosError;
 
-        // Tratamento de erros do proxy
-        if (axiosError.response?.data?.error) {
-          const proxyError = axiosError.response.data.error;
-
-          if (proxyError.includes("timeout")) {
-            throw new Error("Timeout - ESP32 não respondeu");
-          }
-
-          if (proxyError.includes("Connection failed")) {
-            throw new Error("Falha na conexão com ESP32");
-          }
-
-          throw new Error(proxyError);
-        }
-
-        // Tratamento de erros diretos
         if (
           axiosError.code === "ECONNREFUSED" ||
           axiosError.code === "ERR_NETWORK"
