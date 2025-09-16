@@ -25,14 +25,14 @@ export const forgotPassword = async (email: string): Promise<void> => {
   } catch (error) {
     throw formatAndThrowError(
       error,
-      "Erro ao recuperar senha, tente novamente",
+      "Erro ao recuperar senha, tente novamente"
     );
   }
 };
 
 export const resetPassword = async (
   password: string,
-  token: string,
+  token: string
 ): Promise<void> => {
   try {
     await api.post("/auth/reset-password", {
@@ -42,7 +42,7 @@ export const resetPassword = async (
   } catch (error) {
     throw formatAndThrowError(
       error,
-      "Erro ao redefinir senha, tente novamente",
+      "Erro ao redefinir senha, tente novamente"
     );
   }
 };

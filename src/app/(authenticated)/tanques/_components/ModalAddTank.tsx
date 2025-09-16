@@ -12,14 +12,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useTanks } from "@/hooks/useTanks";
 import { AddTankSchema } from "@/schemas/addTank-schema";
 
 const ModalAddTank = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { addTank } = useTanks();
 
   const handleAddTank = (data: AddTankSchema) => {
-    console.log("Adicionando tanque...", data);
-    setIsModalOpen(false);
+    try {
+      addTank(data);
+      console.log("Tanque adicionado com sucesso:", data);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Erro ao adicionar tanque:", error);
+    }
   };
 
   return (

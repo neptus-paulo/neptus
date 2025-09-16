@@ -51,9 +51,35 @@ export default function OfflineAuthManager() {
 }
 export function useAuthState() {
   const { data: session, status } = useSession();
-  const { isOnline } = useInternetConnection(); // Hook correto aqui também
-  const { cachedUser, offlineSessionValid, isOffline } = useOfflineAuthStore();
+  const { isOnline } = useInternetConnection();
+  const { cachedUser, offlineSessionValid, isDevMode, isAuthRequired } =
+    useOfflineAuthStore();
 
+  // Se está em modo de desenvolvimento, sempre autenticado
+  if (isDevMode()) {
+    return {
+      isAuthenticated: true,
+      user: { name: "Dev User", email: "dev@test.com" },
+      isLoading: false,
+      isOffline: !isOnline,
+    };
+  }
+
+  // Se não precisa de auth, considera autenticado
+  if (!isAuthRequired()) {
+    const user = cachedUser || {
+      name: "Offline User",
+      email: "offline@local.com",
+    };
+    return {
+      isAuthenticated: true,
+      user,
+      isLoading: false,
+      isOffline: !isOnline,
+    };
+  }
+
+  // Lógica normal de autenticação
   if (isOnline) {
     return {
       isAuthenticated: status === "authenticated",

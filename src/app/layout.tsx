@@ -1,18 +1,12 @@
 import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 
 import Providers from "@/auth/Providers";
 import DataSyncManager from "@/components/DataSyncManager";
 import InstallPWAPrompt from "@/components/InstallPWAPromptWithIOS";
-import OfflineDebugInfo from "@/components/OfflineDebugInfo";
 import OfflineIndicator from "@/components/OfflineIndicator";
-
-const interSans = Inter({
-  subsets: ["latin"],
-});
 
 // Nova forma de definir viewport no Next.js
 export const viewport: Viewport = {
@@ -104,14 +98,11 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#1e40af" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body
-        className={`${interSans.className} antialiased max-w-[430px] mx-auto`}
-      >
+      <body className="antialiased max-w-[430px] mx-auto">
         <Providers>
           <OfflineIndicator />
           <DataSyncManager />
           <InstallPWAPrompt />
-          {/* <OfflineDebugInfo /> */}
           <Toaster
             position="top-center"
             richColors

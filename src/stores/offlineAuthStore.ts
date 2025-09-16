@@ -8,6 +8,7 @@ interface OfflineAuthState {
   cachedUser: UserSession | null;
   lastLoginTime: number | null;
   offlineSessionValid: boolean;
+  hasEverLoggedIn: boolean;
 
   // Actions
   setOfflineStatus: (status: boolean) => void;
@@ -15,9 +16,16 @@ interface OfflineAuthState {
   setLastLoginTime: (time: number) => void;
   validateOfflineSession: () => boolean;
   clearOfflineAuth: () => void;
+  setHasEverLoggedIn: (hasLogged: boolean) => void;
+  isAuthRequired: () => boolean;
+  isDevMode: () => boolean;
 }
 
-const OFFLINE_SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const OFFLINE_SESSION_DURATION = 24 * 60 * 60 * 1000;
+
+const getDevMode = (): boolean => {
+  return process.env.NEXT_PUBLIC_DEV_MODE === "true";
+};
 
 export const useOfflineAuthStore = create<OfflineAuthState>()(
   persist(
@@ -26,6 +34,7 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
       cachedUser: null,
       lastLoginTime: null,
       offlineSessionValid: false,
+      hasEverLoggedIn: false,
 
       setOfflineStatus: (status: boolean) => {
         set({ isOffline: status });
@@ -35,6 +44,7 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
         set({
           cachedUser: user,
           lastLoginTime: user ? Date.now() : null,
+          hasEverLoggedIn: user ? true : get().hasEverLoggedIn,
         });
       },
 
@@ -42,10 +52,50 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
         set({ lastLoginTime: time });
       },
 
+      setHasEverLoggedIn: (hasLogged: boolean) => {
+        set({ hasEverLoggedIn: hasLogged });
+      },
+
+      isDevMode: () => {
+        return getDevMode();
+      },
+
+      isAuthRequired: () => {
+        const { hasEverLoggedIn, isOffline, offlineSessionValid } = get();
+        const isDevModeActive = getDevMode();
+
+        console.log("🔍 Verificando se auth é necessária:", {
+          isDevMode: isDevModeActive,
+          hasEverLoggedIn,
+          isOffline,
+          offlineSessionValid,
+        });
+
+        if (isDevModeActive) {
+          console.log("🔧 Modo de desenvolvimento - auth desabilitada");
+          return false;
+        }
+
+        if (!hasEverLoggedIn) {
+          console.log("🔐 Primeira vez - login obrigatório");
+          return true;
+        }
+
+        if (isOffline && offlineSessionValid) {
+          console.log("📱 Offline com sessão válida - auth não necessária");
+          return false;
+        }
+
+        return true;
+      },
+
       validateOfflineSession: () => {
         const { cachedUser, lastLoginTime } = get();
 
-        console.log("🔍 Validando sessão offline:", { cachedUser: !!cachedUser, lastLoginTime });
+        console.log("🔍 Validando sessão offline:", {
+          cachedUser: !!cachedUser,
+          lastLoginTime,
+        });
 
         if (!cachedUser || !lastLoginTime) {
           set({ offlineSessionValid: false });
@@ -57,14 +107,17 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
         const timeDiff = now - lastLoginTime;
         const isValid = timeDiff < OFFLINE_SESSION_DURATION;
 
-        console.log(`⏰ Tempo desde último login: ${Math.floor(timeDiff / (1000 * 60))} minutos`);
+        console.log(
+          `⏰ Tempo desde último login: ${Math.floor(
+            timeDiff / (1000 * 60)
+          )} minutos`
+        );
         console.log(`✅ Sessão válida: ${isValid}`);
 
         set({ offlineSessionValid: isValid });
 
         if (!isValid) {
           console.log("🧹 Limpando sessão expirada");
-          // Clear expired session
           set({
             cachedUser: null,
             lastLoginTime: null,
@@ -88,7 +141,8 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
         cachedUser: state.cachedUser,
         lastLoginTime: state.lastLoginTime,
         offlineSessionValid: state.offlineSessionValid,
+        hasEverLoggedIn: state.hasEverLoggedIn,
       }),
-    },
-  ),
+    }
+  )
 );

@@ -84,8 +84,8 @@ src/
 │   └── ...
 ├── services/                     # Camadas de serviço da API
 │   ├── auth-service.ts
-│   ├── esp32-service.ts
-│   └── turbidity-service.ts
+│   ├── auth-service.ts
+│   └── esp32-service.ts
 ├── stores/                       # Stores de estado Zustand
 │   ├── esp32ConfigStore.ts       # Estado de configuração do ESP32
 │   ├── offlineAuthStore.ts       # Autenticação offline

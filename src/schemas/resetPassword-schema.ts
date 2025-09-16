@@ -26,7 +26,7 @@ export const resetPasswordSchema = z
   })
   .refine(
     ({ password, passwordConfirmation }) => password === passwordConfirmation,
-    { message: "As senhas não são iguais", path: ["passwordConfirmation"] },
+    { message: "As senhas não são iguais", path: ["passwordConfirmation"] }
   );
 
 export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>;

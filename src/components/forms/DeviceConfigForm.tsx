@@ -12,7 +12,6 @@ import {
   deviceConfigSchema,
 } from "@/schemas/deviceConfig-schema";
 import { useESP32ConfigStore } from "@/stores/esp32ConfigStore";
-import { parseErrorMessage } from "@/utils/error-util";
 
 import AppButton from "../AppButton";
 import {

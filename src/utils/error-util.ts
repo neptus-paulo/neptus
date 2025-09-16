@@ -27,7 +27,7 @@ export const getFriendlyMessage = (error: ApiError | Error): string => {
 
 export const formatAndThrowError = (
   error: unknown,
-  defaultMessage = "Ocorreu um erro inesperado",
+  defaultMessage = "Ocorreu um erro inesperado"
 ): never => {
   if (error instanceof ApiError) {
     console.error(`Erro ${error.statusCode} -`, error);

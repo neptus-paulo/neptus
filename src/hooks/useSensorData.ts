@@ -5,7 +5,7 @@ import {
   subscribeToDataUpdates,
   useOnlineStatus,
 } from "@/hooks/useOnlineStatus";
-import { SensorData, turbidityService } from "@/services/turbidity-service";
+import { SensorData, turbidityService } from "@/services/esp32-service";
 
 interface UseSensorDataReturn {
   sensorData: SensorData | null;

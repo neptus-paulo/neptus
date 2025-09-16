@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import AppButton from "@/components/AppButton";
@@ -32,40 +33,53 @@ const AdditionalParameters = ({
 }: AdditionalParametersProps) => {
   const { text } = getQualityColor(storedData?.turbidityValue || 0);
 
-  const hourAndMinute = storedData
-    ? new Date(storedData.timestamp).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "--:--";
+  const hourAndMinute = useMemo(() => {
+    return storedData
+      ? new Date(storedData.timestamp).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "--:--";
+  }, [storedData]);
 
-  const dayMonthYear = storedData
-    ? new Date(storedData.timestamp).toLocaleDateString([], {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-      })
-    : "--/--/--";
+  const dayMonthYear = useMemo(() => {
+    return storedData
+      ? new Date(storedData.timestamp).toLocaleDateString([], {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+        })
+      : "--/--/--";
+  }, [storedData]);
 
-  // TODO: Substituir por dados reais ou props/context
-  const turbidityData = {
-    value: storedData?.turbidityValue || 0,
-    quality: text,
-    timestamp: { time: hourAndMinute, date: dayMonthYear },
-  };
+  // Memoizar o objeto turbidityData para evitar re-criações
+  const turbidityData = useMemo(
+    () => ({
+      value: storedData?.turbidityValue || 0,
+      quality: text,
+      timestamp: { time: hourAndMinute, date: dayMonthYear },
+    }),
+    [storedData?.turbidityValue, text, hourAndMinute, dayMonthYear]
+  );
 
-  const handleSubmit = (data: TurbidityFormSchema) => {
-    const prev = localStorage.getItem("storagedTurbidityData");
-    const prevArray = prev ? JSON.parse(prev) : [];
+  const handleSubmit = useCallback(
+    (data: TurbidityFormSchema) => {
+      const prev = localStorage.getItem("storagedTurbidityData");
+      const prevArray = prev ? JSON.parse(prev) : [];
 
-    const newEntry = { id: uuidv4(), turbidityData, ...data };
-    const updatedArray = [...prevArray, newEntry];
+      const newEntry = { id: uuidv4(), turbidityData, ...data };
+      const updatedArray = [...prevArray, newEntry];
 
-    localStorage.setItem("storagedTurbidityData", JSON.stringify(updatedArray));
-    localStorage.removeItem("turbidityData");
-    console.log("Dados de turbidez registrados", data);
-    onOpenChange(false);
-  };
+      localStorage.setItem(
+        "storagedTurbidityData",
+        JSON.stringify(updatedArray)
+      );
+      localStorage.removeItem("turbidityData");
+      console.log("Dados de turbidez registrados", data);
+      onOpenChange(false);
+    },
+    [turbidityData, onOpenChange]
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>

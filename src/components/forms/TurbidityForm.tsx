@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback } from "react";
 import { ControllerRenderProps, useForm } from "react-hook-form";
 
 import ColorRangeSelector from "@/components/ColorRangeSelector";
@@ -18,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTanks } from "@/hooks/useTanks";
 import { cn } from "@/lib/utils";
 import {
   TurbidityFormSchema,
@@ -31,41 +33,29 @@ interface TurbidityFormProps {
 }
 
 const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
+  const { tanks } = useTanks();
+
   const form = useForm<TurbidityFormSchema>({
     resolver: zodResolver(turbidityFormSchema),
     defaultValues: {
       tank: initialValues?.tank || "",
       waterColor: initialValues?.waterColor || 0,
-      oxygen: initialValues?.oxygen || 0,
-      temperature: initialValues?.temperature || 0,
-      ph: initialValues?.ph || 0,
-      ammonia: initialValues?.ammonia || 0,
+      oxygen: initialValues?.oxygen,
+      temperature: initialValues?.temperature,
+      ph: initialValues?.ph,
+      ammonia: initialValues?.ammonia,
     },
   });
 
   const { handleSubmit, reset, control } = form;
 
-  const CustomInputNumber = (field: ControllerRenderProps) => (
-    <Input
-      type="number"
-      placeholder="0,0"
-      step="0.1"
-      {...field}
-      onFocus={(e) => {
-        if (e.target.value === "0") {
-          e.target.value = "";
-        }
-      }}
-      onChange={(e) => {
-        field.onChange(parseFloat(e.target.value));
-      }}
-    />
+  const handleFormSubmit = useCallback(
+    (data: TurbidityFormSchema) => {
+      onSubmit(data);
+      reset();
+    },
+    [onSubmit, reset]
   );
-
-  const handleFormSubmit = (data: TurbidityFormSchema) => {
-    onSubmit(data);
-    reset();
-  };
 
   return (
     <Form {...form}>
@@ -111,9 +101,11 @@ const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
                     <SelectValue placeholder="Selecione um tanque" />
                   </SelectTrigger>
                   <SelectContent>
-                    {/* TODO: Inserir a lista real de tanques */}
-                    <SelectItem value="Tanque 1">Tanque 1</SelectItem>
-                    <SelectItem value="Tanque 2">Tanque 2</SelectItem>
+                    {tanks.map((tank) => (
+                      <SelectItem key={tank.id} value={tank.name}>
+                        {tank.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -130,7 +122,24 @@ const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
               <FormItem>
                 <FormLabel>Oxigênio (mg/L)</FormLabel>
                 <FormControl>
-                  <CustomInputNumber {...field} />
+                  <Input
+                    type="number"
+                    placeholder="0,0"
+                    step="0.1"
+                    autoComplete="off"
+                    inputMode="decimal"
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === "" || value === null) {
+                        field.onChange(undefined);
+                      } else {
+                        const numValue = parseFloat(value);
+                        field.onChange(isNaN(numValue) ? undefined : numValue);
+                      }
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -144,7 +153,24 @@ const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
               <FormItem>
                 <FormLabel>Temperatura °C</FormLabel>
                 <FormControl>
-                  <CustomInputNumber {...field} />
+                  <Input
+                    type="number"
+                    placeholder="0,0"
+                    step="0.1"
+                    autoComplete="off"
+                    inputMode="decimal"
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === "" || value === null) {
+                        field.onChange(undefined);
+                      } else {
+                        const numValue = parseFloat(value);
+                        field.onChange(isNaN(numValue) ? undefined : numValue);
+                      }
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -158,7 +184,24 @@ const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
               <FormItem>
                 <FormLabel>PH da água</FormLabel>
                 <FormControl>
-                  <CustomInputNumber {...field} />
+                  <Input
+                    type="number"
+                    placeholder="0,0"
+                    step="0.1"
+                    autoComplete="off"
+                    inputMode="decimal"
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === "" || value === null) {
+                        field.onChange(undefined);
+                      } else {
+                        const numValue = parseFloat(value);
+                        field.onChange(isNaN(numValue) ? undefined : numValue);
+                      }
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -172,7 +215,24 @@ const TurbidityForm = ({ onSubmit, id, initialValues }: TurbidityFormProps) => {
               <FormItem>
                 <FormLabel>Amônia</FormLabel>
                 <FormControl>
-                  <CustomInputNumber {...field} />
+                  <Input
+                    type="number"
+                    placeholder="0,0"
+                    step="0.1"
+                    autoComplete="off"
+                    inputMode="decimal"
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === "" || value === null) {
+                        field.onChange(undefined);
+                      } else {
+                        const numValue = parseFloat(value);
+                        field.onChange(isNaN(numValue) ? undefined : numValue);
+                      }
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

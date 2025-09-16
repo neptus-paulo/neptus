@@ -53,7 +53,7 @@ export const useESP32ConfigStore = create<ESP32ConfigStore>()(
           ? `/${config.endpoint.replace(/^\/+/, "")}`
           : "";
 
-        return `http://${config.ip}${port}${endpoint}`;
+        return `https://${config.ip}${port}${endpoint}`;
       },
     }),
     {
