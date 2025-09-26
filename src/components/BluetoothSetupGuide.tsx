@@ -10,7 +10,9 @@ interface BluetoothSetupGuideProps {
   onSuccess?: () => void;
 }
 
-export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuideProps) {
+export default function BluetoothSetupGuide({
+  onSuccess,
+}: BluetoothSetupGuideProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isChecking, setIsChecking] = useState(false);
   const [bluetoothStatus, setBluetoothStatus] = useState<{
@@ -24,7 +26,7 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
       title: "Abrir Configurações do Chrome",
       description: "Acesse as flags experimentais do Chrome",
       action: "Abrir chrome://flags/#enable-web-bluetooth",
-      link: "chrome://flags/#enable-web-bluetooth"
+      link: "chrome://flags/#enable-web-bluetooth",
     },
     {
       title: "Habilitar Web Bluetooth",
@@ -35,7 +37,7 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
       title: "Habilitar Funcionalidades Experimentais",
       description: "Ative também as funcionalidades da plataforma web",
       action: "Abrir chrome://flags/#enable-experimental-web-platform-features",
-      link: "chrome://flags/#enable-experimental-web-platform-features"
+      link: "chrome://flags/#enable-experimental-web-platform-features",
     },
     {
       title: "Reiniciar Navegador",
@@ -46,7 +48,7 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
       title: "Testar Conexão",
       description: "Verificar se o Bluetooth está funcionando",
       action: "Verificar",
-    }
+    },
   ];
 
   const checkBluetoothStatus = async () => {
@@ -54,7 +56,7 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
     try {
       const status = await bluetoothService.checkBluetoothAvailability();
       setBluetoothStatus(status);
-      
+
       if (status.available) {
         setCurrentStep(steps.length);
         onSuccess?.();
@@ -72,12 +74,12 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
 
   const handleStepAction = (step: number) => {
     const currentStepData = steps[step];
-    
+
     if (currentStepData.link) {
       // Abre o link em uma nova aba
-      window.open(currentStepData.link, '_blank');
+      window.open(currentStepData.link, "_blank");
     }
-    
+
     if (step < steps.length - 1) {
       setCurrentStep(step + 1);
     } else {
@@ -87,7 +89,10 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
   };
 
   const isStepCompleted = (step: number) => {
-    return step < currentStep || (bluetoothStatus?.available && step === steps.length - 1);
+    return (
+      step < currentStep ||
+      (bluetoothStatus?.available && step === steps.length - 1)
+    );
   };
 
   const isStepCurrent = (step: number) => {
@@ -100,7 +105,9 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
         <div className="flex items-center gap-3">
           <CheckCircle className="h-6 w-6 text-green-600" />
           <div>
-            <h3 className="font-medium text-green-900">Bluetooth Configurado!</h3>
+            <h3 className="font-medium text-green-900">
+              Bluetooth Configurado!
+            </h3>
             <p className="text-sm text-green-700">
               Web Bluetooth está funcionando. Você pode conectar ao ESP32 agora.
             </p>
@@ -116,7 +123,9 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
         <div className="flex items-start gap-3">
           <AlertCircle className="h-6 w-6 text-blue-600 mt-0.5" />
           <div>
-            <h3 className="font-medium text-blue-900">Configuração do Web Bluetooth</h3>
+            <h3 className="font-medium text-blue-900">
+              Configuração do Web Bluetooth
+            </h3>
             <p className="text-sm text-blue-700">
               Siga os passos abaixo para habilitar o Bluetooth no seu navegador:
             </p>
@@ -138,32 +147,38 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-3">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium ${
-                  isStepCompleted(index)
-                    ? "bg-green-600 text-white"
-                    : isStepCurrent(index)
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-400 text-white"
-                }`}>
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium ${
+                    isStepCompleted(index)
+                      ? "bg-green-600 text-white"
+                      : isStepCurrent(index)
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-400 text-white"
+                  }`}
+                >
                   {isStepCompleted(index) ? "✓" : index + 1}
                 </div>
                 <div>
-                  <h4 className={`font-medium ${
-                    isStepCompleted(index)
-                      ? "text-green-900"
-                      : isStepCurrent(index)
-                      ? "text-blue-900"
-                      : "text-gray-600"
-                  }`}>
+                  <h4
+                    className={`font-medium ${
+                      isStepCompleted(index)
+                        ? "text-green-900"
+                        : isStepCurrent(index)
+                        ? "text-blue-900"
+                        : "text-gray-600"
+                    }`}
+                  >
                     {step.title}
                   </h4>
-                  <p className={`text-sm ${
-                    isStepCompleted(index)
-                      ? "text-green-700"
-                      : isStepCurrent(index)
-                      ? "text-blue-700"
-                      : "text-gray-500"
-                  }`}>
+                  <p
+                    className={`text-sm ${
+                      isStepCompleted(index)
+                        ? "text-green-700"
+                        : isStepCurrent(index)
+                        ? "text-blue-700"
+                        : "text-gray-500"
+                    }`}
+                  >
                     {step.description}
                   </p>
                 </div>
@@ -202,8 +217,9 @@ export default function BluetoothSetupGuide({ onSuccess }: BluetoothSetupGuidePr
 
       <div className="p-3 bg-gray-50 border border-gray-200 rounded-md">
         <p className="text-xs text-gray-600">
-          <strong>Dica:</strong> Se ainda não funcionar após seguir todos os passos, 
-          tente usar o Chrome Canary que tem melhor suporte a funcionalidades experimentais.
+          <strong>Dica:</strong> Se ainda não funcionar após seguir todos os
+          passos, tente usar o Chrome Canary que tem melhor suporte a
+          funcionalidades experimentais.
         </p>
       </div>
     </div>
