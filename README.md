@@ -259,6 +259,53 @@ npm start
 - Configurar monitoramento e analytics
 - Habilitar funcionalidades PWA
 
+## 📶 Conexão com ESP32 via Bluetooth
+
+### Requisitos para Web Bluetooth
+
+O aplicativo suporta conexão direta com ESP32 via Bluetooth Low Energy (BLE). Para usar esta funcionalidade:
+
+**Requisitos de Segurança:**
+- **HTTPS**: Web Bluetooth só funciona em contextos seguros (HTTPS)
+- **Localhost**: Para desenvolvimento, use `localhost` em vez do IP da rede
+- **Navegadores Suportados**: Chrome, Edge, Opera
+
+**Configuração para Desenvolvimento:**
+
+```bash
+# Opção 1: Usar localhost
+npm run dev
+# Acesse via: http://localhost:3000
+
+# Opção 2: HTTPS local (certificado auto-assinado)
+# Crie certificado SSL local:
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+
+# Configure Next.js para HTTPS
+# Adicione no next.config.ts:
+# server: {
+#   https: {
+#     key: fs.readFileSync('./key.pem'),
+#     cert: fs.readFileSync('./cert.pem'),
+#   },
+# }
+```
+
+**Configuração do ESP32:**
+- Nome do dispositivo: `ESP32-Turbidez`
+- Service UUID: `12345678-1234-5678-1234-56789abcdef0`
+- Characteristic UUID: `abcdefab-1234-5678-1234-56789abcdef0`
+
+**Fluxo de Conexão:**
+1. ESP32 anuncia como "ESP32-Turbidez"
+2. Usuário clica em "Conectar ao ESP32"
+3. Navegador mostra diálogo de pareamento
+4. Aplicativo recebe dados de turbidez em tempo real
+
+### Alternativa: Conexão Wi-Fi (HTTP)
+
+Se o Bluetooth não estiver disponível, o aplicativo também suporta conexão via Wi-Fi usando HTTP/HTTPS.
+
 ## 🤝 Contribuindo
 
 1. Faça fork do repositório

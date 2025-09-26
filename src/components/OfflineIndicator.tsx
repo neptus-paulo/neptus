@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Wifi, WifiOff } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { useInternetConnection } from "@/hooks/useInternetConnection";
 import { useOfflineAuthStore } from "@/stores/offlineAuthStore";

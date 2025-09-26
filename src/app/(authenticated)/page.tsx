@@ -5,6 +5,7 @@ import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
 import { useCallback, useEffect, useState } from "react";
 
 import AppButton from "@/components/AppButton";
+import ConnectionSelector from "@/components/ConnectionSelector";
 import DeviceStatus from "@/components/DeviceStatus";
 import ESP32Config from "@/components/ESP32Config";
 import LoadingFullScreen from "@/components/LoadingFullScreen";
@@ -16,6 +17,7 @@ import TurbidityDisplay from "@/components/TurbidityDisplay";
 import { initializeAppState, useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useSensorData } from "@/hooks/useSensorData";
 import { SensorData } from "@/services/esp32-service";
+import { useConnectionStore } from "@/stores/connectionStore";
 
 import AdditionalParameters from "./_components/AdditionalParameters/page";
 
@@ -41,10 +43,12 @@ interface LastSampleData {
 export default function Home() {
   const { isAuthenticated, isLoading: authLoading } = useAuthState();
   const { isOnline, needsConfiguration } = useOnlineStatus();
-  const { sensorData, isLoading, error, refetch } = useSensorData();
+  const { sensorData, isLoading, error, refetch, connectionType, isConnected } = useSensorData();
+  const { connectionType: storeConnectionType, setConnectionType } = useConnectionStore();
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+  const [showConnectionSelector, setShowConnectionSelector] = useState(false);
   const [lastSampleData, setLastSampleData] = useState<LastSampleData | null>(
     null
   );
@@ -86,12 +90,20 @@ export default function Home() {
 
   // Status da última atualização
   const getLastUpdatedText = () => {
-    if (needsConfiguration) return "ESP32 não configurado";
-    if (isLoading) return "Carregando...";
-    if (error) return "Erro na conexão";
-    if (!isOnline) return "Dispositivo offline";
-    if (sensorData) return "Atualizado agora mesmo";
-    return "Nenhum dado disponível";
+    if (connectionType === "bluetooth") {
+      if (isLoading) return "Conectando via Bluetooth...";
+      if (error) return `Bluetooth: ${error}`;
+      if (!isConnected) return "Bluetooth desconectado";
+      if (sensorData) return "Dados via Bluetooth - agora mesmo";
+      return "Aguardando dados Bluetooth";
+    } else {
+      if (needsConfiguration) return "ESP32 não configurado";
+      if (isLoading) return "Carregando...";
+      if (error) return "Erro na conexão";
+      if (!isOnline) return "Dispositivo offline";
+      if (sensorData) return "Atualizado agora mesmo";
+      return "Nenhum dado disponível";
+    }
   };
 
   const handleSaveReading = () => {
@@ -120,6 +132,23 @@ export default function Home() {
         <div className="space-y-3">
           <TurbidityDisplay turbidityValue={turbidityValue} />
 
+          {/* Mostrar seletor de conexão se não tiver configuração ou se solicitado */}
+          {(showConnectionSelector || (!isConnected && !isLoading)) && (
+            <ConnectionSelector
+              connectionType={storeConnectionType}
+              onConnectionTypeChange={(type) => {
+                setConnectionType(type);
+                // Para Bluetooth, não fechamos automaticamente para o usuário ver as instruções
+                if (type === "wifi") {
+                  setShowConnectionSelector(false);
+                }
+              }}
+              onConfigurationChange={() => {
+                setShowConnectionSelector(false);
+              }}
+            />
+          )}
+
           <div className="flex gap-2">
             <AppButton
               className="flex-1"
@@ -135,7 +164,7 @@ export default function Home() {
               variant="outline"
               size="lg"
               onClick={refetch}
-              disabled={isLoading || needsConfiguration}
+              disabled={isLoading || (connectionType === "wifi" && needsConfiguration)}
             >
               <RefreshCw className={isLoading ? "animate-spin" : ""} />
             </AppButton>
@@ -143,7 +172,7 @@ export default function Home() {
             <AppButton
               variant="outline"
               size="lg"
-              onClick={() => setIsConfigModalOpen(true)}
+              onClick={() => setShowConnectionSelector(!showConnectionSelector)}
             >
               <Settings />
             </AppButton>
@@ -175,7 +204,8 @@ export default function Home() {
 
           <DeviceStatus
             batteryLevel={67}
-            isConnected={isOnline}
+            isConnected={isConnected}
+            deviceName={connectionType === "bluetooth" ? "ESP32-Turbidez" : undefined}
             className="col-span-1"
           />
         </div>

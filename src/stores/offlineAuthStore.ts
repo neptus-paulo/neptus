@@ -64,12 +64,12 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
         const { hasEverLoggedIn, isOffline, offlineSessionValid } = get();
         const isDevModeActive = getDevMode();
 
-        console.log("🔍 Verificando se auth é necessária:", {
-          isDevMode: isDevModeActive,
-          hasEverLoggedIn,
-          isOffline,
-          offlineSessionValid,
-        });
+        // console.log("🔍 Verificando se auth é necessária:", {
+        //   isDevMode: isDevModeActive,
+        //   hasEverLoggedIn,
+        //   isOffline,
+        //   offlineSessionValid,
+        // });
 
         if (isDevModeActive) {
           console.log("🔧 Modo de desenvolvimento - auth desabilitada");
