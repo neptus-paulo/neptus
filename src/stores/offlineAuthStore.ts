@@ -78,7 +78,9 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
 
         // Se nunca logou (primeira vez), sempre exige login independente de estar online/offline
         if (!hasEverLoggedIn) {
-          console.log("🔐 Primeira vez - login obrigatório (online ou offline)");
+          console.log(
+            "🔐 Primeira vez - login obrigatório (online ou offline)"
+          );
           return true;
         }
 

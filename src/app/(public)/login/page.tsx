@@ -37,8 +37,8 @@ const LoginPage = () => {
                 Conexão necessária
               </h3>
               <p className="text-sm text-amber-800">
-                Para fazer login pela primeira vez, você precisa estar conectado à internet. 
-                Por favor, verifique sua conexão e tente novamente.
+                Para fazer login pela primeira vez, você precisa estar conectado
+                à internet. Por favor, verifique sua conexão e tente novamente.
               </p>
             </div>
           </div>
