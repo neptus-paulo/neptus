@@ -76,17 +76,20 @@ export const useOfflineAuthStore = create<OfflineAuthState>()(
           return false;
         }
 
+        // Se nunca logou (primeira vez), sempre exige login independente de estar online/offline
         if (!hasEverLoggedIn) {
-          console.log("🔐 Primeira vez - login obrigatório");
+          console.log("🔐 Primeira vez - login obrigatório (online ou offline)");
           return true;
         }
 
+        // Se já logou antes e está offline com sessão válida, permite acesso
         if (isOffline && offlineSessionValid) {
           console.log("📱 Offline com sessão válida - auth não necessária");
           return false;
         }
 
-        return true;
+        // Se já logou antes e está online, também permite (vai validar com servidor)
+        return false;
       },
 
       validateOfflineSession: () => {

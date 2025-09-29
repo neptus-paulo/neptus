@@ -89,6 +89,7 @@ export function useAuthState() {
     };
   }
 
+  // Em modo offline, só permite se já logou antes E tem sessão válida
   return {
     isAuthenticated: offlineSessionValid && cachedUser !== null,
     user: offlineSessionValid ? cachedUser : null,

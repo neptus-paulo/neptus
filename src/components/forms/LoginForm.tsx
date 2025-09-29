@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
+import { useInternetConnection } from "@/hooks/useInternetConnection";
 import { useLogin } from "@/hooks/useLogin";
 import { LoginFormSchema, loginFormSchema } from "@/schemas/login-schema";
 import { parseErrorMessage } from "@/utils/error-util";
@@ -21,6 +22,7 @@ import { Input } from "../ui/input";
 
 const LoginForm = () => {
   const { mutate: login, isError, error, isPending } = useLogin();
+  const { isOnline } = useInternetConnection();
 
   const loginForm = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -85,8 +87,9 @@ const LoginForm = () => {
           type="submit"
           className="w-full"
           isLoading={formState.isSubmitting || isPending}
+          disabled={!isOnline || formState.isSubmitting || isPending}
         >
-          Entrar
+          {!isOnline ? "Sem conexão" : "Entrar"}
         </AppButton>
         {isError && (
           <p className="text-error text-sm text-center">
