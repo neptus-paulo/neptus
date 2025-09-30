@@ -8,19 +8,34 @@ const withPWA = withPWAInit({
   skipWaiting: true,
   scope: "/",
   sw: "sw.js",
+  // Configuração simplificada para permitir acesso offline ao login
   runtimeCaching: [
     {
-      urlPattern: /^https?.*/,
+      // Cache de recursos estáticos
+      urlPattern: /\.(js|css|woff|woff2|png|jpg|jpeg|svg|ico)$/,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "static-resources",
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 dias
+        },
+      },
+    },
+    {
+      // Para páginas, permite offline mas com timeout rápido
+      urlPattern: /^https?.*$/,
       handler: "NetworkFirst",
       options: {
-        cacheName: "offlineCache",
+        cacheName: "pages-cache",
+        networkTimeoutSeconds: 2, // Timeout bem curto
         expiration: {
-          maxEntries: 200,
+          maxEntries: 50,
         },
       },
     },
   ],
-  disable: process.env.NODE_ENV === "development",
+  disable: true, // Temporariamente desabilitado para corrigir problema offline
   publicExcludes: ["!robots.txt", "!sitemap.xml"],
 });
 
