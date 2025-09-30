@@ -1,1 +1,223 @@
-if(!self.define){let e,s={};const t=(t,i)=>(t=new URL(t+".js",i).href,s[t]||new Promise((s=>{if("document"in self){const e=document.createElement("script");e.src=t,e.onload=s,document.head.appendChild(e)}else e=t,importScripts(t),s()})).then((()=>{let e=s[t];if(!e)throw new Error(`Module ${t} didn’t register its module`);return e})));self.define=(i,n)=>{const r=e||("document"in self?document.currentScript.src:"")||location.href;if(s[r])return;let a={};const c=e=>t(e,r),u={module:{uri:r},exports:a,require:c};s[r]=Promise.all(i.map((e=>u[e]||c(e)))).then((e=>(n(...e),a)))}}define(["./workbox-cb477421"],(function(e){"use strict";importScripts(),self.skipWaiting(),e.clientsClaim(),e.precacheAndRoute([{url:"/_next/app-build-manifest.json",revision:"7b3f6e760ac900c4fd836201d41ed172"},{url:"/_next/static/chunks/128-c72e7d8a559f447e.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/144-6e8e9f696d495850.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/227-92b0c2f65c825801.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/291-bc030fdeb2a4dcc0.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/32-f11ab8cc5c435b4b.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/34-bdaeef2bb816842c.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/410-9c6bb1665e16045b.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/412-f307e5aced2a9d78.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/464-d428eda3d36d5b11.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/4bd1b696-196b842f18ffa222.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/541-58e2420f5a090e86.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/63-ce9e56d40764dd83.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/684-7a8ab883ddb0795d.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/763-10b280131d64ef0f.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/768-d6aa8e4e59a5326e.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/830-ed3b904584680b1b.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/871-9ea779993e7ae98d.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/874-fdd326194151b439.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/903-dd69ab500b75351d.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/91-fe4aa5387dc25484.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/914-94b2223d37d45c65.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/949-c863150cfc7b4020.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/998-82681034bf36c426.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(authenticated)/configuracoes/page-b6c1513d8ee2aaf7.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(authenticated)/historico/page-36b6faf99e0f04ca.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(authenticated)/layout-40bb3e2a5031d43e.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(authenticated)/page-c0bfe7349c31439f.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(authenticated)/tanques/page-fa4e1601bc08688a.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(authenticated)/teste/page-63a8c73475c2265f.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(public)/login/page-e46fb869e4053197.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(public)/recuperar-senha/page-82b0c7ccd74054cb.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/(public)/redefinir-senha/page-8ffdd46ff0da1646.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/_not-found/page-98f8dbe99afc7cf1.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/api/auth/%5B...nextauth%5D/route-c07f1f88f2901e53.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/layout-316846054a786d59.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/app/not-found-3e51288c53b1c9e4.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/framework-f593a28cde54158e.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/main-app-8a32d6a0f8f97886.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/main-f40f1dd0eb1cd7a7.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/pages/_app-da15c11dea942c36.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/pages/_error-cc3f077a18ea1793.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/chunks/polyfills-42372ed130431b0a.js",revision:"846118c33b2c0e922d7b3a7676f81f6f"},{url:"/_next/static/chunks/webpack-3a68ca926a023bb8.js",revision:"u1dCyIC7IprezO6RSJ5xB"},{url:"/_next/static/css/381b1e73160ebac8.css",revision:"381b1e73160ebac8"},{url:"/_next/static/u1dCyIC7IprezO6RSJ5xB/_buildManifest.js",revision:"b20a019195207b4780fea1986f0c9dc9"},{url:"/_next/static/u1dCyIC7IprezO6RSJ5xB/_ssgManifest.js",revision:"b6652df95db52feb4daf4eca35380933"},{url:"/android-chrome-192x192.png",revision:"5958073e2ecae0f28bec658d4744f572"},{url:"/android-chrome-512x512.png",revision:"98c12993a2df99d80df95c65b4e668ba"},{url:"/assets/apple-touch-icon.png",revision:"59bf0eedad93347dd3913e3613f82974"},{url:"/assets/favicon-16x16.png",revision:"67cdeddc464d563953340ec7122a054e"},{url:"/assets/favicon-32x32.png",revision:"f1bb13e967fc16e7a0252c5144f150fb"},{url:"/assets/icon-1024x1024.png",revision:"95ecdfbc7be4684076257d929e8fc912"},{url:"/assets/site.webmanifest",revision:"053100cb84a50d2ae7f5492f7dd7f25e"},{url:"/fonts/Inter_18pt-Bold.ttf",revision:"f77ce9588dccbc52fdbf0b79f0d63714"},{url:"/fonts/Inter_18pt-Medium.ttf",revision:"8540f35bf8acd509b9ce356f1111e983"},{url:"/fonts/Inter_18pt-Regular.ttf",revision:"37dcabff629c3690303739be2e0b3524"},{url:"/fonts/Inter_18pt-SemiBold.ttf",revision:"e5532d993e2de30fa92422df0a8849dd"},{url:"/images/logo-google.png",revision:"54d92439140ad747288601dac21b3c88"},{url:"/images/logo-vertical-light.svg",revision:"ec70a89b86c09feab64d4137bd63c14c"},{url:"/images/neptus-azul.svg",revision:"81df43261680ec33fd63a7d4e9b54400"},{url:"/images/tanque-amarelo-claro.jpg",revision:"19002cb3fd36b4286af484a0afb0d14f"},{url:"/images/tanque-amarelo-escuro.jpg",revision:"e0c14e381e1dce71b2024b11f6c65d6a"},{url:"/images/tanque-transparente-claro.jpg",revision:"fbfa45d53e1c05ac3dd33c981647be9f"},{url:"/images/tanque-transparente-escuro.jpg",revision:"3edd6ed4bf9dac6b2065999507e851b8"},{url:"/images/tanque-verde-claro.jpg",revision:"567cc69a63188be81b26adc4c16af295"},{url:"/images/tanque-verde-escuro.jpg",revision:"165a2a764f5da4701057327848b25cff"},{url:"/manifest.json",revision:"a7304112707adad39fa15ef7e6d2d29a"}],{ignoreURLParametersMatching:[]}),e.cleanupOutdatedCaches(),e.registerRoute("/",new e.NetworkFirst({cacheName:"start-url",plugins:[{cacheWillUpdate:async({request:e,response:s,event:t,state:i})=>s&&"opaqueredirect"===s.type?new Response(s.body,{status:200,statusText:"OK",headers:s.headers}):s}]}),"GET"),e.registerRoute(/^https?.*/,new e.NetworkFirst({cacheName:"offlineCache",plugins:[new e.ExpirationPlugin({maxEntries:200})]}),"GET")}));
+// Service Worker integrado com sistema de autenticação offline do Neptus
+// Baseado na documentação oficial do Next.js + lógica personalizada
+
+const CACHE_NAME = "neptus-v1";
+const STATIC_CACHE = "neptus-static-v1";
+const PAGE_CACHE = "neptus-pages-v1";
+
+// Recursos essenciais que sempre devem estar disponíveis offline
+const ESSENTIAL_RESOURCES = [
+  "/",
+  "/login",
+  "/manifest.json",
+  "/android-chrome-192x192.png",
+  "/android-chrome-512x512.png",
+  "/assets/favicon-16x16.png",
+  "/assets/favicon-32x32.png",
+  "/assets/apple-touch-icon.png",
+  "/assets/icon-1024x1024.png",
+];
+
+// Função para verificar se usuário já logou (lê do localStorage)
+function checkHasEverLoggedIn() {
+  try {
+    const offlineAuth = self.localStorage?.getItem("offline-auth-storage");
+    if (offlineAuth) {
+      const data = JSON.parse(offlineAuth);
+      return data?.state?.hasEverLoggedIn === true;
+    }
+  } catch (error) {
+    console.log("SW: Erro ao ler localStorage:", error);
+  }
+  return false;
+}
+
+// Install event - cache recursos essenciais
+self.addEventListener("install", function (event) {
+  console.log("SW: Instalando...");
+  event.waitUntil(
+    caches
+      .open(STATIC_CACHE)
+      .then(function (cache) {
+        console.log("SW: Cacheando recursos essenciais");
+        return cache.addAll(ESSENTIAL_RESOURCES);
+      })
+      .catch(function (error) {
+        console.log("SW: Erro ao cachear recursos:", error);
+      })
+  );
+  // Força ativação imediata
+  self.skipWaiting();
+});
+
+// Activate event - limpa caches antigos
+self.addEventListener("activate", function (event) {
+  console.log("SW: Ativando...");
+  event.waitUntil(
+    caches
+      .keys()
+      .then(function (cacheNames) {
+        return Promise.all(
+          cacheNames.map(function (cacheName) {
+            if (
+              cacheName !== CACHE_NAME &&
+              cacheName !== STATIC_CACHE &&
+              cacheName !== PAGE_CACHE
+            ) {
+              console.log("SW: Limpando cache antigo:", cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
+      .then(() => {
+        // Assume controle imediatamente
+        return self.clients.claim();
+      })
+  );
+});
+
+// Fetch event - estratégia personalizada para funcionalidade offline
+self.addEventListener("fetch", function (event) {
+  // Ignora requests não HTTP/HTTPS
+  if (!event.request.url.startsWith("http")) {
+    return;
+  }
+
+  // Para navegação de páginas (HTML)
+  if (
+    event.request.mode === "navigate" ||
+    (event.request.method === "GET" &&
+      event.request.headers.get("accept") &&
+      event.request.headers.get("accept").includes("text/html"))
+  ) {
+    event.respondWith(handlePageRequest(event.request));
+    return;
+  }
+
+  // Para recursos estáticos (imagens, fontes, JS, CSS)
+  if (
+    event.request.destination === "image" ||
+    event.request.destination === "font" ||
+    event.request.destination === "script" ||
+    event.request.destination === "style"
+  ) {
+    event.respondWith(handleStaticResource(event.request));
+    return;
+  }
+
+  // Para APIs e outros requests - sempre Network First
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      // Se API falhar offline, não retorna cache para evitar dados incorretos
+      return new Response('{"error": "Offline"}', {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      });
+    })
+  );
+});
+
+// Função para lidar com requests de páginas
+async function handlePageRequest(request) {
+  try {
+    // Tenta network primeiro com timeout
+    const networkPromise = fetch(request);
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Network timeout")), 3000)
+    );
+
+    const response = await Promise.race([networkPromise, timeoutPromise]);
+
+    // Se sucesso, salva no cache e retorna
+    if (response.ok) {
+      const cache = await caches.open(PAGE_CACHE);
+      cache.put(request, response.clone());
+      return response;
+    }
+  } catch (error) {
+    console.log("SW: Network falhou, tentando cache:", error.message);
+  }
+
+  // Se network falhou, tenta cache
+  const cachedResponse = await caches.match(request);
+  if (cachedResponse) {
+    console.log("SW: Servindo página do cache");
+    return cachedResponse;
+  }
+
+  // Se não tem cache da página específica, verifica se deve redirecionar para login
+  const url = new URL(request.url);
+  const hasEverLoggedIn = checkHasEverLoggedIn();
+
+  console.log("SW: Verificando redirecionamento offline:", {
+    path: url.pathname,
+    hasEverLoggedIn,
+  });
+
+  // Se nunca logou e não está na página de login, redireciona para login
+  if (!hasEverLoggedIn && url.pathname !== "/login") {
+    const loginCache = await caches.match("/login");
+    if (loginCache) {
+      console.log("SW: Redirecionando para login cached");
+      return loginCache;
+    }
+  }
+
+  // Fallback para página principal se disponível
+  const homeCache = await caches.match("/");
+  if (homeCache) {
+    console.log("SW: Servindo página principal do cache");
+    return homeCache;
+  }
+
+  // Se nada funcionou, retorna erro offline
+  return new Response(
+    `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Offline - Neptus</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+          .container { max-width: 400px; margin: 0 auto; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Você está offline</h1>
+          <p>Conecte-se à internet para acessar o aplicativo.</p>
+          <button onclick="window.location.reload()">Tentar novamente</button>
+        </div>
+      </body>
+    </html>
+  `,
+    {
+      status: 200,
+      headers: { "Content-Type": "text/html" },
+    }
+  );
+}
+
+// Função para lidar com recursos estáticos
+async function handleStaticResource(request) {
+  // Cache First para recursos estáticos
+  const cachedResponse = await caches.match(request);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(STATIC_CACHE);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    console.log("SW: Erro ao buscar recurso estático:", error);
+    // Para recursos estáticos, se falhar, não retorna nada (deixa o browser lidar)
+    throw error;
+  }
+}

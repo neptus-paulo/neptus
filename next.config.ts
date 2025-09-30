@@ -1,43 +1,4 @@
 import type { NextConfig } from "next";
-// @ts-expect-error next-pwa doesn't have proper types
-import withPWAInit from "next-pwa";
-
-const withPWA = withPWAInit({
-  dest: "public",
-  register: true,
-  skipWaiting: true,
-  scope: "/",
-  sw: "sw.js",
-  // Configuração simplificada para permitir acesso offline ao login
-  runtimeCaching: [
-    {
-      // Cache de recursos estáticos
-      urlPattern: /\.(js|css|woff|woff2|png|jpg|jpeg|svg|ico)$/,
-      handler: "CacheFirst",
-      options: {
-        cacheName: "static-resources",
-        expiration: {
-          maxEntries: 100,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 dias
-        },
-      },
-    },
-    {
-      // Para páginas, permite offline mas com timeout rápido
-      urlPattern: /^https?.*$/,
-      handler: "NetworkFirst",
-      options: {
-        cacheName: "pages-cache",
-        networkTimeoutSeconds: 2, // Timeout bem curto
-        expiration: {
-          maxEntries: 50,
-        },
-      },
-    },
-  ],
-  disable: true, // Temporariamente desabilitado para corrigir problema offline
-  publicExcludes: ["!robots.txt", "!sitemap.xml"],
-});
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -46,6 +7,45 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Headers de segurança seguindo a documentação oficial do Next.js
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+        ],
+      },
+      {
+        source: "/sw.js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "no-cache, no-store, must-revalidate",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; script-src 'self'",
+          },
+        ],
+      },
+    ];
+  },
 };
 
-export default withPWA(nextConfig);
+export default nextConfig;

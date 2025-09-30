@@ -4,11 +4,10 @@ import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 
 import Providers from "@/auth/Providers";
-import BasicServiceWorkerRegistration from "@/components/BasicServiceWorkerRegistration";
 import DataSyncManager from "@/components/DataSyncManager";
 import InstallPWAPrompt from "@/components/InstallPWAPromptWithIOS";
 import OfflineIndicator from "@/components/OfflineIndicator";
-import OfflineInitializer from "@/components/OfflineInitializer";
+import { ServiceWorkerRegistration } from "@/components/ServiceWorkerRegistration";
 
 // Nova forma de definir viewport no Next.js
 export const viewport: Viewport = {
@@ -102,8 +101,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased max-w-[430px] mx-auto">
         <Providers>
-          <BasicServiceWorkerRegistration />
-          <OfflineInitializer />
+          <ServiceWorkerRegistration />
           <OfflineIndicator />
           <DataSyncManager />
           <InstallPWAPrompt />
