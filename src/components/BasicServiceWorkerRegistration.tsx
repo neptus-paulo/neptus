@@ -8,16 +8,20 @@ export default function BasicServiceWorkerRegistration() {
       const registerSW = async () => {
         try {
           // Primeiro, desregistra qualquer SW existente
-          const registrations = await navigator.serviceWorker.getRegistrations();
+          const registrations =
+            await navigator.serviceWorker.getRegistrations();
           await Promise.all(
-            registrations.map(registration => registration.unregister())
+            registrations.map((registration) => registration.unregister())
           );
           console.log("🗑️ SWs antigos desregistrados");
 
           // Registra o novo SW básico
-          const registration = await navigator.serviceWorker.register("/sw-basic.js", {
-            scope: "/",
-          });
+          const registration = await navigator.serviceWorker.register(
+            "/sw-basic.js",
+            {
+              scope: "/",
+            }
+          );
 
           console.log("✅ SW Básico registrado:", registration.scope);
 
@@ -25,7 +29,6 @@ export default function BasicServiceWorkerRegistration() {
           if (registration.waiting) {
             registration.waiting.postMessage({ type: "SKIP_WAITING" });
           }
-
         } catch (error) {
           console.error("❌ Erro ao registrar SW básico:", error);
         }
