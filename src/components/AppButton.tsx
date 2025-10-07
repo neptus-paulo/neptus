@@ -46,15 +46,15 @@ const AppButton = ({
 export const AppButtonLogout = () => {
   const handleLogout = async () => {
     // Limpa cache offline antes de fazer signOut
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
-        localStorage.removeItem('offline-auth-storage');
-        localStorage.removeItem('offline-data-storage');
+        localStorage.removeItem("offline-auth-storage");
+        localStorage.removeItem("offline-data-storage");
       } catch (error) {
-        console.error('Erro ao limpar cache offline:', error);
+        console.error("Erro ao limpar cache offline:", error);
       }
     }
-    
+
     // Faz o signOut
     await signOut({ callbackUrl: "/login", redirect: true });
   };

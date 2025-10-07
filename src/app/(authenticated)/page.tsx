@@ -40,7 +40,8 @@ interface LastSampleData {
 export default function Home() {
   const { isAuthenticated, isLoading: authLoading } = useAuthState();
   const { isOnline } = useInternetConnection();
-  const { sensorData, isLoading, error, refetch, isConnected } = useSensorData();
+  const { sensorData, isLoading, error, refetch, isConnected } =
+    useSensorData();
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isBluetoothConfigOpen, setIsBluetoothConfigOpen] = useState(false);

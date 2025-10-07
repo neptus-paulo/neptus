@@ -1,4 +1,3 @@
- 
 "use client";
 
 import { useEffect, useState } from "react";
@@ -36,7 +35,7 @@ export default function OfflineDebugInfo() {
   return (
     <div className="fixed bottom-4 right-4 bg-black bg-opacity-80 text-white text-xs p-3 rounded-lg max-w-xs z-50">
       <div className="mb-2 font-bold">Debug Offline</div>
-      
+
       <div className="space-y-1">
         <div>🌐 Internet: {internetOnline ? "✅" : "❌"}</div>
         <div> Navigator: {navigator?.onLine ? "✅" : "❌"}</div>

@@ -269,6 +269,7 @@ npm start
 O aplicativo suporta conexão direta com ESP32 via Bluetooth Low Energy (BLE). Para usar esta funcionalidade:
 
 **Requisitos de Segurança:**
+
 - **HTTPS**: Web Bluetooth só funciona em contextos seguros (HTTPS)
 - **Localhost**: Para desenvolvimento, use `localhost` em vez do IP da rede
 - **Navegadores Suportados**: Chrome, Edge, Opera
@@ -295,11 +296,13 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 ```
 
 **Configuração do ESP32:**
+
 - Nome do dispositivo: `ESP32-Turbidez`
 - Service UUID: `12345678-1234-5678-1234-56789abcdef0`
 - Characteristic UUID: `abcdefab-1234-5678-1234-56789abcdef0`
 
 **Fluxo de Conexão:**
+
 1. ESP32 anuncia como "ESP32-Turbidez"
 2. Usuário clica em "Conectar ao ESP32"
 3. Navegador mostra diálogo de pareamento

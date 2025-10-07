@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import {
-  bluetoothService,
-  SensorData,
-} from "@/services/bluetooth-service";
+import { bluetoothService, SensorData } from "@/services/bluetooth-service";
 import { useBluetoothConfigStore } from "@/stores/bluetoothConfigStore";
 
 interface UseBluetoothSensorDataReturn {
@@ -21,7 +18,7 @@ export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const { config, setConnectionStatus } = useBluetoothConfigStore();
 
   const isSupported = bluetoothService.isBluetoothSupported();
@@ -40,7 +37,7 @@ export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
   useEffect(() => {
     const unsubscribeStatus = bluetoothService.onStatusChange((status) => {
       setIsConnected(status.isConnected);
-      
+
       // Atualiza o store
       setConnectionStatus({
         isConnected: status.isConnected,
@@ -79,14 +76,15 @@ export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
       );
 
       const success = await bluetoothService.connect();
-      
+
       if (success) {
         console.log("✅ Conectado via Bluetooth");
       } else {
         setError("Falha ao conectar com o dispositivo");
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
+      const errorMessage =
+        err instanceof Error ? err.message : "Erro desconhecido";
       setError(errorMessage);
       console.error("❌ Erro ao conectar Bluetooth:", err);
     } finally {

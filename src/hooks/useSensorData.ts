@@ -1,5 +1,6 @@
-import { useBluetoothSensorData } from "./useBluetoothSensorData";
 import { SensorData } from "@/services/bluetooth-service";
+
+import { useBluetoothSensorData } from "./useBluetoothSensorData";
 
 interface UseSensorDataReturn {
   sensorData: SensorData | null;
