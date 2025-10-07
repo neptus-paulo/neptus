@@ -66,13 +66,14 @@ src/
 │   ├── ColorRangeSelector.tsx    # Seletor customizado de cor da água
 │   ├── DataSyncManager.tsx       # Gerenciamento de sincronização offline
 │   ├── DeviceStatus.tsx          # Exibição de status do ESP32
-│   ├── ESP32Config.tsx           # Configuração do dispositivo
+│   ├── BluetoothConfig.tsx       # Configuração Bluetooth do dispositivo
 │   ├── TurbidityDisplay.tsx      # Visualização de turbidez
 │   └── ...
 ├── hooks/                        # Hooks customizados do React
 │   ├── useLogin.ts
-│   ├── useOnlineStatus.ts
-│   ├── useSensorData.ts
+│   ├── useInternetConnection.ts  # Status da conexão com internet
+│   ├── useSensorData.ts          # Dados dos sensores via Bluetooth
+│   ├── useBluetoothSensorData.ts # Hook de comunicação Bluetooth
 │   ├── useTurbidityForm.ts       # Lógica de negócio do formulário
 │   └── ...
 ├── lib/                          # Bibliotecas utilitárias
@@ -84,10 +85,9 @@ src/
 │   └── ...
 ├── services/                     # Camadas de serviço da API
 │   ├── auth-service.ts
-│   ├── auth-service.ts
-│   └── esp32-service.ts
+│   └── bluetooth-service.ts      # Comunicação Bluetooth com ESP32
 ├── stores/                       # Stores de estado Zustand
-│   ├── esp32ConfigStore.ts       # Estado de configuração do ESP32
+│   ├── bluetoothConfigStore.ts   # Configuração Bluetooth do ESP32
 │   ├── offlineAuthStore.ts       # Autenticação offline
 │   └── offlineDataStore.ts       # Gerenciamento de dados offline
 ├── types/                        # Definições de tipos TypeScript
@@ -205,10 +205,13 @@ Gerencia sincronização de dados offline/online:
 
 Configure seu dispositivo ESP32 através da aplicação:
 
-1. Acesse a configuração do dispositivo no dashboard
-2. Defina credenciais WiFi e endpoints do servidor
-3. Monitore status e conectividade do dispositivo
-4. Gerencie configurações de calibração do sensor
+1. Certifique-se de que o ESP32 está com Bluetooth ativado
+2. Acesse a configuração Bluetooth no dashboard
+3. Conecte ao dispositivo "ESP32-Turbidez" via Web Bluetooth API
+4. Monitore status e conectividade do dispositivo
+5. Receba dados de turbidez em tempo real via notificações Bluetooth
+
+O sistema utiliza o protocolo Nordic UART Service (NUS) para comunicação Bluetooth.
 
 ### Configuração de Autenticação
 

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { bluetoothService } from "@/services/bluetooth-service";
-import { SensorData } from "@/services/esp32-service";
+import {
+  bluetoothService,
+  SensorData,
+} from "@/services/bluetooth-service";
 import { useBluetoothConfigStore } from "@/stores/bluetoothConfigStore";
 
 interface UseBluetoothSensorDataReturn {

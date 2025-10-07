@@ -8,8 +8,10 @@ const LayoutAuthenticated = ({
 }: Readonly<{ children: ReactNode }>) => {
   return (
     <AuthGuard>
-      <Header />
-      <div className="p-5">{children}</div>
+      <div className="min-h-screen flex flex-col max-w-[430px] mx-auto">
+        <Header />
+        <main className="flex-1 p-5 w-full">{children}</main>
+      </div>
     </AuthGuard>
   );
 };

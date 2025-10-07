@@ -1,6 +1,4 @@
-import { Bluetooth, Link2, Link2Off, Wifi } from "lucide-react";
-
-import { useConnectionStore } from "@/stores/connectionStore";
+import { Bluetooth, Link2Off } from "lucide-react";
 
 import Box from "./Box";
 import { Badge } from "./ui/badge";
@@ -19,26 +17,19 @@ const DeviceStatus = ({
   className,
   deviceName,
 }: DeviceStatusProps) => {
-  const { connectionType } = useConnectionStore();
-
   const getConnectionIcon = () => {
     if (!isConnected) return <Link2Off />;
-    return connectionType === "bluetooth" ? <Bluetooth /> : <Wifi />;
+    return <Bluetooth />;
   };
 
   const getConnectionText = () => {
     if (!isConnected) return "Desconectado";
-    if (connectionType === "bluetooth") {
-      return deviceName ? `${deviceName} (BLE)` : "Bluetooth";
-    }
-    return "Wi-Fi";
+    return deviceName || "Bluetooth";
   };
 
   return (
     <Box className={className}>
-      <h3 className="font-semibold text-muted-foreground mb-4">
-        Status do ESP32
-      </h3>
+      <h3 className="font-semibold text-muted-foreground mb-4">Status</h3>
 
       <div className="space-y-4">
         <div className="space-y-1">
@@ -56,13 +47,6 @@ const DeviceStatus = ({
             {getConnectionText()}
           </Badge>
         </div>
-
-        {connectionType === "bluetooth" && (
-          <div className="text-xs text-muted-foreground">
-            <p>Via Bluetooth Low Energy</p>
-            <p>Atualizações em tempo real</p>
-          </div>
-        )}
       </div>
     </Box>
   );

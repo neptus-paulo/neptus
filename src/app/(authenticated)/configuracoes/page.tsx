@@ -1,5 +1,4 @@
 import AccountConfigForm from "@/components/forms/AccountConfigForm";
-import DeviceConfigForm from "@/components/forms/DeviceConfigForm";
 import InstallAppButton, { InstallInfo } from "@/components/InstallAppButton";
 import IOSInstallInfo from "@/components/IOSInstallInfo";
 import PageHeader from "@/components/PageHeader";
@@ -13,15 +12,11 @@ const Configurations = () => {
         description="Mantenha os dados atualizados"
       />
 
-      <Tabs defaultValue="dispositivo" className="space-y-5">
+      <Tabs defaultValue="conta" className="space-y-5">
         <TabsList className="flex w-full p-0">
-          <TabsTrigger value="dispositivo">Dispositivo</TabsTrigger>
           <TabsTrigger value="conta">Conta</TabsTrigger>
           <TabsTrigger value="app">App</TabsTrigger>
         </TabsList>
-        <TabsContent value="dispositivo">
-          <DeviceConfigForm />
-        </TabsContent>
         <TabsContent value="conta">
           <AccountConfigForm />
         </TabsContent>

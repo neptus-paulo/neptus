@@ -99,7 +99,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#1e40af" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body className="antialiased max-w-[430px] mx-auto">
+      <body className="antialiased">
         <Providers>
           <ServiceWorkerRegistration />
           <OfflineIndicator />

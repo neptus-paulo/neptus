@@ -1,4 +1,12 @@
-import { ESP32Data, SensorData } from "./esp32-service";
+export interface SensorData {
+  turbidez: number;
+  temperatura?: number;
+  ph?: number;
+}
+
+export interface ESP32Data extends SensorData {
+  timestamp: string;
+}
 
 export interface BluetoothConfig {
   serviceUUID: string;

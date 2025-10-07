@@ -5,13 +5,11 @@ import { useEffect, useState } from "react";
 
 import { useAuthState } from "@/components/OfflineAuthManager";
 import { useInternetConnection } from "@/hooks/useInternetConnection";
-import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useOfflineAuthStore } from "@/stores/offlineAuthStore";
 
 export default function OfflineDebugInfo() {
   const [isVisible, setIsVisible] = useState(false);
   const { isOnline: internetOnline } = useInternetConnection();
-  const { isOnline: esp32Online } = useOnlineStatus();
   const authState = useAuthState();
   const {
     cachedUser,
@@ -41,8 +39,7 @@ export default function OfflineDebugInfo() {
       
       <div className="space-y-1">
         <div>🌐 Internet: {internetOnline ? "✅" : "❌"}</div>
-        <div>🔌 ESP32: {esp32Online ? "✅" : "❌"}</div>
-        <div>📶 Navigator: {navigator?.onLine ? "✅" : "❌"}</div>
+        <div> Navigator: {navigator?.onLine ? "✅" : "❌"}</div>
         <div>📱 Is Offline: {isOffline ? "✅" : "❌"}</div>
         <div>🔐 Auth Valid: {authState.isAuthenticated ? "✅" : "❌"}</div>
         <div>⏱️ Offline Valid: {offlineSessionValid ? "✅" : "❌"}</div>

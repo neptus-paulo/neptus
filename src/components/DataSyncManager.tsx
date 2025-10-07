@@ -3,11 +3,11 @@
 import { CheckCircle, Upload, Wifi, WifiOff } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useInternetConnection } from "@/hooks/useInternetConnection";
 import { useOfflineDataStore } from "@/stores/offlineDataStore";
 
 export default function DataSyncManager() {
-  const { isOnline } = useOnlineStatus();
+  const { isOnline } = useInternetConnection();
   const { getUnsyncedReadings, markReadingAsSynced, clearSyncedReadings } =
     useOfflineDataStore();
   const [syncStatus, setSyncStatus] = useState<

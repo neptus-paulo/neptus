@@ -102,6 +102,17 @@
   *::placeholder {
     @apply !text-placeholder;
   }
+  
+  /* Previne que o Radix Dialog/Sheet adicione padding ao body */
+  body {
+    padding-right: 0 !important;
+  }
+  
+  /* Garante que o header e main não sejam afetados quando o Sheet abre */
+  header,
+  main {
+    transition: none !important;
+  }
 }
 
 @font-face {

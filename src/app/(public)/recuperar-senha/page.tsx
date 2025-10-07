@@ -1,12 +1,11 @@
 import Link from "next/link";
 
-import AppButton from "@/components/AppButton";
 import BackButton from "@/components/BackButton";
 import ForgotPasswordForm from "@/components/forms/ForgotPasswordForm";
 
 const ForgotPasswordPage = () => {
   return (
-    <div className="flex flex-col items-center p-5 gap-6">
+    <div className="flex flex-col items-center p-5 gap-6 max-w-[430px] mx-auto">
       <BackButton />
       <div className="flex flex-col items-center px-10">
         <h1 className="font-semibold text-2xl">Recuperação de senha</h1>
@@ -29,4 +28,5 @@ const ForgotPasswordPage = () => {
     </div>
   );
 };
+
 export default ForgotPasswordPage;

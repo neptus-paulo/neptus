@@ -10,7 +10,7 @@ const LoginPage = () => {
   const { isOnline } = useInternetConnection();
 
   return (
-    <div className="flex flex-col items-center p-5 gap-6">
+    <div className="flex flex-col items-center p-5 gap-6 max-w-[430px] mx-auto">
       <div className="flex flex-col items-center px-10">
         <Image
           src="/images/logo-vertical-light.svg"

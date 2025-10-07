@@ -44,13 +44,28 @@ const AppButton = ({
 };
 
 export const AppButtonLogout = () => {
+  const handleLogout = async () => {
+    // Limpa cache offline antes de fazer signOut
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('offline-auth-storage');
+        localStorage.removeItem('offline-data-storage');
+      } catch (error) {
+        console.error('Erro ao limpar cache offline:', error);
+      }
+    }
+    
+    // Faz o signOut
+    await signOut({ callbackUrl: "/login", redirect: true });
+  };
+
   return (
     <AppButton
       variant="outline"
       className="w-full border-destructive text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:border-destructive"
       size="lg"
       tabIndex={-1}
-      onClick={() => signOut({ callbackUrl: "/" })}
+      onClick={handleLogout}
     >
       <LogOut />
       <span className="text-base">Sair da conta</span>

@@ -130,8 +130,8 @@ const InstallPWAPrompt = () => {
     );
   }
 
-  // Android/Desktop - Comportamento normal
-  if (isInstalled || !isInstallable || (!canInstall && !isIOS)) {
+  // Android/Desktop - Sempre mostra se for instalável (removendo verificação do isMobile)
+  if (isInstalled || !isInstallable) {
     return null;
   }
 
