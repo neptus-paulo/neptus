@@ -7,6 +7,7 @@ README.md
 .gitignore
 Dockerfile
 docker-compose.yml
+.dockerignore
 
 # Logs
 *.log
@@ -38,3 +39,12 @@ docker/README.md
 
 # Node Modules
 node_modules/
+npm-debug.log
+
+# arquivos do Nest.Js
+.next
+!.next/static
+!.next/standalone
+
+# Arquivos dos Pipelines (Workflows)
+.github/
