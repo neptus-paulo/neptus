@@ -224,7 +224,7 @@ jobs:
             IMAGE_TAG: ${{ needs.tag.outputs.image_tag }}
             NOME_PROJETO: ${{ steps.deploy_env.outputs.NOME_DO_PROJETO }}
             DOCKER_USER: ${{ steps.deploy_env.outputs.DOCKER_USERNAME }}
-            REPOSITORIO_INFRA: "testesDevOps/repoInfra"
+            REPOSITORIO_INFRA: "Deploy-to-RNP-K8s-Cluster/repoInfra"
         run: |
           PROJETO_PATH="projetos/$NOME_PROJETO/${{ steps.deploy_env.outputs.DOCKER_HUB_REPOSITORY_NAME }}"
           
