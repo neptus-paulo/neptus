@@ -1,6 +1,6 @@
 "use client";
 
-import { RefreshCw, Save, Settings } from "lucide-react";
+import { BluetoothIcon, RefreshCw, Save, Settings } from "lucide-react";
 import { Timestamp } from "next/dist/server/lib/cache-handlers/types";
 import { useCallback, useEffect, useState } from "react";
 
@@ -105,42 +105,47 @@ export default function Home() {
     <>
       <main className="space-y-5">
         <PageHeader
-          title="Turbidez em tempo real"
+          title="Leitura de turbidez"
           description={getLastUpdatedText()}
         />
 
-        <div className="space-y-3">
-          <TurbidityDisplay turbidityValue={turbidityValue} />
+        {isConnected ? (
+          <div className="space-y-3">
+            <TurbidityDisplay turbidityValue={turbidityValue} />
 
-          <div className="flex gap-2">
-            <AppButton
-              className="flex-1"
-              size="lg"
-              onClick={handleSaveReading}
-              disabled={isLoading || !sensorData}
-            >
-              <Save />
-              Registrar e continuar
-            </AppButton>
+            <div className="flex gap-2">
+              <AppButton
+                className="flex-1"
+                size="lg"
+                onClick={handleSaveReading}
+                disabled={isLoading || !sensorData}
+              >
+                <Save />
+                Registrar e continuar
+              </AppButton>
 
+              <AppButton
+                variant="outline"
+                size="lg"
+                onClick={() => setIsBluetoothConfigOpen(true)}
+              >
+                <Settings />
+              </AppButton>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center items-center">
             <AppButton
-              variant="outline"
+              variant="default"
               size="lg"
               onClick={refetch}
               disabled={isLoading}
             >
-              <RefreshCw className={isLoading ? "animate-spin" : ""} />
-            </AppButton>
-
-            <AppButton
-              variant="outline"
-              size="lg"
-              onClick={() => setIsBluetoothConfigOpen(true)}
-            >
-              <Settings />
+              <BluetoothIcon />
+              Conectar ao dispositivo
             </AppButton>
           </div>
-        </div>
+        )}
 
         <div className="grid grid-cols-2 grid-rows-2 gap-5">
           <SensorMetric

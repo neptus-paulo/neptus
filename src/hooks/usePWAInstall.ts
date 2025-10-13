@@ -79,6 +79,11 @@ export const usePWAInstall = () => {
       if (iOS && !isInstalled) {
         setIsInstallable(true);
       }
+
+      // No Android mobile, também marca como instalável (pode ser via prompt manual)
+      if (mobile && !iOS && !isInstalled) {
+        setIsInstallable(true);
+      }
     };
 
     checkIfInstalled();
@@ -137,6 +142,7 @@ export const usePWAInstall = () => {
 
         if (engagementScore < 10) {
           console.log("💡 Baixo engagement - mostrando prompt manual");
+          setIsInstallable(true);
           setShowManualPrompt(true);
         } else {
           console.log("🎯 Alto engagement - aguardando beforeinstallprompt");
@@ -146,11 +152,12 @@ export const usePWAInstall = () => {
               console.log(
                 "⏰ Prompt automático não apareceu - mostrando manual"
               );
+              setIsInstallable(true);
               setShowManualPrompt(true);
             }
-          }, 60000); // Mais 60 segundos
+          }, 30000); // Reduzido para 30 segundos
         }
-      }, 15000); // Reduzido para 15 segundos
+      }, 5000); // Reduzido para 5 segundos para testar
 
       return () => clearTimeout(timeout);
     }

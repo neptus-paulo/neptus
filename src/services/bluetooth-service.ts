@@ -239,6 +239,32 @@ class BluetoothService {
         throw new Error("Web Bluetooth não é suportado neste navegador");
       }
 
+      // Verifica se já está conectado
+      if (
+        this.connectionStatus.isConnected &&
+        this.connectionStatus.server?.connected
+      ) {
+        console.log("✅ Já existe uma conexão ativa - reutilizando");
+        this.notifyStatusChange(); // Notifica os listeners
+        return true;
+      }
+
+      // Se tem um device mas não está conectado, tenta reconectar sem pedir novamente
+      if (this.connectionStatus.device && !this.connectionStatus.isConnected) {
+        console.log("🔄 Tentando reconectar ao dispositivo anterior...");
+        try {
+          const reconnected = await this.connectToDevice(
+            this.connectionStatus.device
+          );
+          if (reconnected) {
+            console.log("✅ Reconexão bem-sucedida!");
+            return true;
+          }
+        } catch (reconnectError) {
+          console.log("⚠️ Falha na reconexão, solicitando novo pareamento...");
+        }
+      }
+
       // EXATAMENTE a mesma lógica do testServiceFilter que funciona
       const device = await navigator.bluetooth.requestDevice({
         filters: [{ services: [this.config.serviceUUID] }],

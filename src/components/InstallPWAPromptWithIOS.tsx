@@ -130,8 +130,14 @@ const InstallPWAPrompt = () => {
     );
   }
 
-  // Android/Desktop - Sempre mostra se for instalável (removendo verificação do isMobile)
-  if (isInstalled || !isInstallable) {
+  // Android/Desktop - Mostra se for instalável OU se deve mostrar prompt manual
+  // Não mostra apenas se já estiver instalado
+  if (isInstalled) {
+    return null;
+  }
+
+  // Se não for instalável E não tiver prompt manual, não mostra
+  if (!isInstallable && !showManualPrompt) {
     return null;
   }
 

@@ -14,14 +14,27 @@ interface UseBluetoothSensorDataReturn {
 }
 
 export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
-  const [sensorData, setSensorData] = useState<SensorData | null>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const { config, setConnectionStatus } = useBluetoothConfigStore();
 
   const isSupported = bluetoothService.isBluetoothSupported();
+
+  // Inicializa com o estado atual do serviço (importante para quando navega entre páginas)
+  const currentStatus = bluetoothService.getConnectionStatus();
+  const [sensorData, setSensorData] = useState<SensorData | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isConnected, setIsConnected] = useState(currentStatus.isConnected);
+  const [error, setError] = useState<string | null>(null);
+
+  // Sincroniza o estado inicial quando o componente monta
+  useEffect(() => {
+    const status = bluetoothService.getConnectionStatus();
+    setIsConnected(status.isConnected);
+
+    if (status.isConnected) {
+      console.log("🔄 Conexão Bluetooth existente detectada");
+      setError(null);
+    }
+  }, []);
 
   // Monitora dados recebidos via Bluetooth
   useEffect(() => {
@@ -35,7 +48,26 @@ export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
 
   // Monitora status de conexão
   useEffect(() => {
+    console.log("🎯 Montando monitor de status Bluetooth");
+
+    // Verifica o status atual imediatamente
+    const currentStatus = bluetoothService.getConnectionStatus();
+    console.log("📊 Status atual ao montar:", currentStatus.isConnected);
+    setIsConnected(currentStatus.isConnected);
+
+    if (currentStatus.isConnected) {
+      console.log("✅ Bluetooth já conectado ao montar hook");
+      setConnectionStatus({
+        isConnected: true,
+        deviceName: currentStatus.device?.name,
+        lastConnection: new Date(),
+      });
+      setError(null);
+    }
+
+    // Inscreve para mudanças futuras
     const unsubscribeStatus = bluetoothService.onStatusChange((status) => {
+      console.log("🔄 Status de conexão mudou:", status.isConnected);
       setIsConnected(status.isConnected);
 
       // Atualiza o store
@@ -47,11 +79,17 @@ export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
 
       if (!status.isConnected) {
         setError("Dispositivo desconectado");
+      } else {
+        setError(null);
       }
     });
 
-    return unsubscribeStatus;
-  }, [setConnectionStatus]);
+    return () => {
+      console.log("🧹 Desmontando monitor de status Bluetooth");
+      unsubscribeStatus();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Array vazio - só executa uma vez ao montar, setConnectionStatus é estável do Zustand
 
   const connect = useCallback(async () => {
     if (!isSupported) {
@@ -61,6 +99,20 @@ export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
 
     if (!config.isConfigured) {
       setError("Bluetooth não está configurado");
+      return;
+    }
+
+    // Verifica se já está conectado ANTES de tentar conectar
+    const currentStatus = bluetoothService.getConnectionStatus();
+    if (currentStatus.isConnected) {
+      console.log("✅ Já está conectado ao Bluetooth - ignorando nova conexão");
+      setIsConnected(true);
+      setError(null);
+      setConnectionStatus({
+        isConnected: true,
+        deviceName: currentStatus.device?.name,
+        lastConnection: new Date(),
+      });
       return;
     }
 
@@ -79,18 +131,30 @@ export const useBluetoothSensorData = (): UseBluetoothSensorDataReturn => {
 
       if (success) {
         console.log("✅ Conectado via Bluetooth");
+        setIsConnected(true);
+        setError(null);
       } else {
         setError("Falha ao conectar com o dispositivo");
       }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Erro desconhecido";
-      setError(errorMessage);
-      console.error("❌ Erro ao conectar Bluetooth:", err);
+
+      // Se o usuário cancelou, não mostra como erro
+      if (
+        errorMessage.includes("cancelled") ||
+        errorMessage.includes("canceled")
+      ) {
+        console.log("ℹ️ Usuário cancelou a seleção de dispositivo");
+        setError(null);
+      } else {
+        setError(errorMessage);
+        console.error("❌ Erro ao conectar Bluetooth:", err);
+      }
     } finally {
       setIsConnecting(false);
     }
-  }, [config, isSupported]);
+  }, [config, isSupported, setConnectionStatus]);
 
   const disconnect = useCallback(async () => {
     try {

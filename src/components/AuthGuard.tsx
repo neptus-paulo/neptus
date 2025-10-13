@@ -68,6 +68,15 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         return;
       }
 
+      // Se está online mas NÃO autenticado, redireciona para login
+      if (isOnline && status === "unauthenticated") {
+        console.log("🔒 Online mas não autenticado - redirecionando para login");
+        setCanAccess(false);
+        setIsChecking(false);
+        router.push("/login");
+        return;
+      }
+
       // Se está offline, verifica cache
       if (!isOnline) {
         const hasValidCache = validateOfflineSession();
@@ -88,10 +97,19 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           setIsChecking(false);
           return;
         }
+
+        // Se está offline e nunca logou, redireciona
+        console.log("🔒 Offline sem login prévio - redirecionando");
+        setCanAccess(false);
+        setIsChecking(false);
+        router.push("/login");
+        return;
       }
 
-      // Se chegou até aqui, precisa fazer login
-      console.log("🔒 Redirecionando para login");
+      // Caso padrão: não permite
+      console.log("🔒 Redirecionando para login (caso padrão)");
+      setCanAccess(false);
+      setIsChecking(false);
       router.push("/login");
     };
 

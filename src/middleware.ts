@@ -6,6 +6,7 @@ export default withAuth(
     const { pathname } = req.nextUrl;
     const token = req.nextauth.token;
 
+    // Se tem token e está tentando acessar página pública, redireciona para home
     if (
       token &&
       (pathname.startsWith("/login") ||
@@ -55,14 +56,14 @@ export default withAuth(
           return true;
         }
 
-        // Se tem token válido, permite acesso
+        // Se tem token válido do NextAuth, permite acesso
         if (token) {
           return true;
         }
 
-        // TEMPORÁRIO: Sempre permite acesso para testar funcionalidade offline
-        // TODO: Implementar validação de sessão offline quando funcionar
-        console.log("🔓 Permitindo acesso sem token para teste offline");
+        // Se não tem token, o middleware bloqueia mas o AuthGuard (client-side)
+        // vai verificar se há sessão offline válida no localStorage
+        // O middleware permite passar para que o AuthGuard faça a verificação client-side
         return true;
       },
     },

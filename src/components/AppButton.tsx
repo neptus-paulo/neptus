@@ -45,18 +45,43 @@ const AppButton = ({
 
 export const AppButtonLogout = () => {
   const handleLogout = async () => {
-    // Limpa cache offline antes de fazer signOut
+    console.log("🚪 Iniciando logout...");
+
+    // Limpa cache offline e dados locais
     if (typeof window !== "undefined") {
       try {
-        localStorage.removeItem("offline-auth-storage");
-        localStorage.removeItem("offline-data-storage");
+        // Lista de todas as chaves do localStorage do app
+        const keysToRemove = [
+          "offline-auth-storage",
+          "offline-data-storage",
+          "bluetooth-config-storage",
+          "pwa-install-dismissed",
+          "storagedTurbidityData",
+          "turbidityData",
+        ];
+
+        keysToRemove.forEach((key) => {
+          localStorage.removeItem(key);
+          console.log(`🧹 Removido: ${key}`);
+        });
+
+        // Também limpa sessionStorage
+        sessionStorage.clear();
+        console.log("🧹 SessionStorage limpo");
       } catch (error) {
-        console.error("Erro ao limpar cache offline:", error);
+        console.error("❌ Erro ao limpar cache:", error);
       }
     }
 
-    // Faz o signOut
-    await signOut({ callbackUrl: "/login", redirect: true });
+    try {
+      // Tenta fazer signOut com NextAuth
+      await signOut({ callbackUrl: "/login", redirect: true });
+      console.log("✅ SignOut concluído");
+    } catch (error) {
+      console.error("❌ Erro no signOut:", error);
+      // Se falhar (ex: offline), redireciona manualmente
+      window.location.href = "/login";
+    }
   };
 
   return (
