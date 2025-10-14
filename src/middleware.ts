@@ -43,7 +43,7 @@ export default withAuth(
           "/favicon.ico",
         ];
 
-        // Permite acesso a rotas públicas
+        // Permite acesso a rotas pública
         if (publicRoutes.some((route) => pathname.startsWith(route))) {
           return true;
         }
