@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  output: "standalone",
   // Headers de segurança seguindo a documentação oficial do Next.js
   async headers() {
     return [
