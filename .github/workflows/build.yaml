@@ -268,8 +268,7 @@ jobs:
             DOCKER_TOKEN_ACCESS: ${{ steps.deploy_env.outputs.DOCKER_TOKEN_ACCESS }}
             TEMP_DOCKERFILE: ${{ steps.dockerfile.outputs.TEMP_DOCKERFILE }}
             DEPLOY_ENV: ".deploy.env"
-            # REPOSITORIO_INFRA: "Deploy-to-RNP-K8s-Cluster/repoInfra"
-            REPOSITORIO_INFRA: "testesDevOps/repoInfra"
+            REPOSITORIO_INFRA: "Deploy-to-RNP-K8s-Cluster/repoInfra"
         run: |
           PROJETO_PATH="projetos/$NOME_PROJETO/${{ steps.deploy_env.outputs.DOCKER_HUB_REPOSITORY_NAME }}"
           
