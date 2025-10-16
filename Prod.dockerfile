@@ -20,23 +20,11 @@ RUN npm run build
 
 
 
+
 # imagem de produção com todas as configs necessárias
 FROM base AS production
 
-# carregando o arquivo .prod.env e criando cada variável de ambiente
-# dentro do container
-ARG ENV_FILE
-COPY ${ENV_FILE} .env
-
-# Limpa comentários e linhas vazias, e carrega cada variável corretamente
-RUN sed -e '/^[[:space:]]*#/d' -e '/^[[:space:]]*$/d' .env | \
-    while IFS='=' read -r key value; do \
-        if [ -n "$key" ]; then \
-            # Reconstroi a linha original: KEY=VALOR, mantendo todos os '=' no valor
-            echo "$key=$value" >> /etc/environment; \
-        fi \
-    done
-
+#__ENVS__#
 
 WORKDIR /app
 
